@@ -8,7 +8,9 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-public class StartActivity extends AppCompatActivity {
+import com.afollestad.materialdialogs.MaterialDialog;
+
+public class StartActivity extends BaseActivity {
 
     private ImageView backgroundImg;
     private TextView tv_title;
@@ -35,11 +37,40 @@ public class StartActivity extends AppCompatActivity {
         detectBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(StartActivity.this, MainActivity.class);
-                startActivity(intent);
+//                Intent intent = new Intent(StartActivity.this, MainActivity.class);
+//                startActivity(intent);
+                showDetectDialog();
             }
         });
 
+    }
+
+    public void showDetectDialog(){
+        String[] list = {
+                "Gallery",
+                "URL",
+                "Camera"
+        };
+        new MaterialDialog.Builder(this)
+                .title("선택")
+                .items(list)
+                .itemsCallback(new MaterialDialog.ListCallback() {
+                    @Override
+                    public void onSelection(MaterialDialog dialog, View view, int which, CharSequence text) {
+                        switch (which){
+                            case 0: // Gallery
+                                showSnackbar("Gallery");
+                                break;
+                            case 1: // URL
+                                showSnackbar("URL");
+                                break;
+                            case 2: // Camera
+                                showSnackbar("Camera");
+                                break;
+                        }
+                    }
+                })
+                .show();
     }
 
 }
