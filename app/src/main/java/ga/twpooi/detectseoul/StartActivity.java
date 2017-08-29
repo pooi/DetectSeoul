@@ -10,6 +10,8 @@ import android.widget.TextView;
 
 import com.afollestad.materialdialogs.MaterialDialog;
 
+import ga.twpooi.detectseoul.activity.CameraActivity;
+
 public class StartActivity extends BaseActivity {
 
     private ImageView backgroundImg;
@@ -64,9 +66,11 @@ public class StartActivity extends BaseActivity {
                             case 1: // URL
                                 showSnackbar("URL");
                                 break;
-                            case 2: // Camera
-                                showSnackbar("Camera");
+                            case 2: { // Camera
+                                Intent intent = new Intent(StartActivity.this, CameraActivity.class);
+                                startActivity(intent);
                                 break;
+                            }
                         }
                     }
                 })
