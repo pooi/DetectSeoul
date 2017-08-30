@@ -132,6 +132,7 @@ public class CameraActivity extends BaseActivity implements OnDetecterListener{
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        cameraView.stop();
         detecter.onDestroy();
     }
 
