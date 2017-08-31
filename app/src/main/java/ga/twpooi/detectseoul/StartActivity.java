@@ -5,8 +5,10 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Handler;
 import android.os.Message;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.InputType;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -16,8 +18,12 @@ import com.afollestad.materialdialogs.MaterialDialog;
 import com.afollestad.materialdialogs.Theme;
 import com.yongchun.library.view.ImageSelectorActivity;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.Executor;
+import java.util.concurrent.Executors;
 
 import ga.twpooi.detectseoul.activity.CameraActivity;
 import ga.twpooi.detectseoul.util.OnDetecterListener;
@@ -29,6 +35,7 @@ public class StartActivity extends BaseActivity implements OnDetecterListener{
     private final int MSG_MESSAGE_HIDE_PROGRESS = 501;
 
     private Detecter detecter;
+    private Executor executor = Executors.newSingleThreadExecutor();
 
     private ImageView backgroundImg;
     private TextView tv_title;
@@ -91,7 +98,7 @@ public class StartActivity extends BaseActivity implements OnDetecterListener{
                                 ImageSelectorActivity.start(StartActivity.this, 1, ImageSelectorActivity.MODE_SINGLE, false,false,false);
                                 break;
                             case 1: // URL
-                                showSnackbar("URL");
+                                loadImgFromURL();
                                 break;
                             case 2: { // Camera
                                 Intent intent = new Intent(StartActivity.this, CameraActivity.class);
@@ -102,6 +109,55 @@ public class StartActivity extends BaseActivity implements OnDetecterListener{
                     }
                 })
                 .show();
+    }
+
+    public void loadImgFromURL(){
+
+        new MaterialDialog.Builder(StartActivity.this)
+                .title("입력")
+                .inputType(InputType.TYPE_CLASS_TEXT |
+                        InputType.TYPE_TEXT_VARIATION_PERSON_NAME |
+                        InputType.TYPE_TEXT_FLAG_CAP_WORDS)
+                .theme(Theme.LIGHT)
+                .positiveText("확인")
+                .negativeText("취소")
+                .input("사진의 URL 주소를 입력해주세요.", "", new MaterialDialog.InputCallback() {
+                    @Override
+                    public void onInput(@NonNull MaterialDialog dialog, CharSequence input) {
+                        final String url = input.toString();
+
+                        handler.sendMessage(handler.obtainMessage(MSG_MESSAGE_SHOW_PROGRESS));
+
+                        executor.execute(new Runnable() {
+                            @Override
+                            public void run() {
+                                try {
+//                                    String url = editURL.getText().toString();
+                                    InputStream input = new java.net.URL(url).openStream();
+                                    //InputStream input = new java.net.URL(editURL.getText().toString()).openConnection().getInputStream();
+
+                                    final Bitmap bitmap =  BitmapFactory.decodeStream(input);
+                                    // recognize_bitmap needs to update the UI(imgResult, txtResult), so invoke it in runOnUiThread
+                                    runOnUiThread(new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            //
+                                            detecter.recognize_bitmap(bitmap);
+                                        }
+                                    });
+
+
+                                } catch (IOException e) {
+                                    e.printStackTrace();
+                                }
+
+                            }
+                        });
+
+                    }
+                })
+                .show();
+
     }
 
     private class MyHandler extends Handler {
