@@ -19,6 +19,7 @@ package ga.twpooi.detectseoul;
 import android.graphics.Bitmap;
 import android.graphics.RectF;
 
+import java.io.Serializable;
 import java.util.List;
 
 /**
@@ -32,7 +33,7 @@ public interface Classifier {
     /**
      * An immutable result returned by a Classifier describing what was recognized.
      */
-    public class Recognition {
+    public class Recognition implements Serializable {
         /**
          * A unique identifier for what has been recognized. Specific to the class, not the instance of
          * the object.

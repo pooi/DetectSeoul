@@ -1,6 +1,7 @@
 package ga.twpooi.detectseoul.activity;
 
 import android.Manifest;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Handler;
@@ -21,12 +22,14 @@ import com.karumi.dexter.PermissionToken;
 import com.karumi.dexter.listener.PermissionRequest;
 import com.karumi.dexter.listener.multi.MultiplePermissionsListener;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import ga.twpooi.detectseoul.BaseActivity;
 import ga.twpooi.detectseoul.Classifier;
 import ga.twpooi.detectseoul.Detecter;
 import ga.twpooi.detectseoul.R;
+import ga.twpooi.detectseoul.StartActivity;
 import ga.twpooi.detectseoul.TensorFlowImageClassifier;
 import ga.twpooi.detectseoul.util.OnDetecterListener;
 
@@ -138,7 +141,13 @@ public class CameraActivity extends BaseActivity implements OnDetecterListener{
 
     @Override
     public void onDetectFinish(List<Classifier.Recognition> results) {
-        showSnackbar(results.toString());
+//        showSnackbar(results.toString());
         handler.sendMessage(handler.obtainMessage(MSG_MESSAGE_HIDE_PROGRESS));
+        ArrayList<Classifier.Recognition> list = new ArrayList<>();
+        list.addAll(results);
+        Intent intent = new Intent(CameraActivity.this, DetailActivity.class);
+        intent.putExtra("data", list);
+        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        startActivity(intent);
     }
 }

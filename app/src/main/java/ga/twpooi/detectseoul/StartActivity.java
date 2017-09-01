@@ -26,6 +26,7 @@ import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 
 import ga.twpooi.detectseoul.activity.CameraActivity;
+import ga.twpooi.detectseoul.activity.DetailActivity;
 import ga.twpooi.detectseoul.util.OnDetecterListener;
 
 public class StartActivity extends BaseActivity implements OnDetecterListener{
@@ -206,7 +207,12 @@ public class StartActivity extends BaseActivity implements OnDetecterListener{
 
     @Override
     public void onDetectFinish(List<Classifier.Recognition> results) {
-        showSnackbar(results.toString());
+//        showSnackbar(results.toString());
         handler.sendMessage(handler.obtainMessage(MSG_MESSAGE_HIDE_PROGRESS));
+        ArrayList<Classifier.Recognition> list = new ArrayList<>();
+        list.addAll(results);
+        Intent intent = new Intent(StartActivity.this, DetailActivity.class);
+        intent.putExtra("data", list);
+        startActivity(intent);
     }
 }
