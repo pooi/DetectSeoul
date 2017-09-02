@@ -7,12 +7,47 @@
     android:background="@color/background_color"
     tools:context="ga.twpooi.detectseoul.activity.DetailActivity">
 
-    <TextView
-        android:id="@+id/tv"
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:textColor="@color/dark_gray"
-        android:text="text"
-        />
+        android:layout_height="match_parent"
+        android:paddingTop="@dimen/custom_actionbar_size"
+        >
+
+        <TextView
+            android:id="@+id/tv"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="@color/dark_gray"
+            android:text="text"
+            />
+
+    </RelativeLayout>
+
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/toolbar"
+        app:contentInsetStart="0dp"
+        android:layout_height="@dimen/custom_actionbar_size"
+        android:layout_width="match_parent"
+        android:background="@color/colorPrimary"
+        >
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+
+            <TextView
+                android:id="@+id/toolbar_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text=""
+                android:textColor="@color/white"
+                android:textSize="@dimen/custom_actionbar_title_size"
+                android:layout_centerInParent="true"
+                />
+
+        </RelativeLayout>
+
+    </android.support.v7.widget.Toolbar>
 
 </RelativeLayout>

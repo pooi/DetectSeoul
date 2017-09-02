@@ -38,6 +38,7 @@ public class CameraActivity extends BaseActivity implements OnDetecterListener{
     private MyHandler handler = new MyHandler();
     private final int MSG_MESSAGE_SHOW_PROGRESS = 500;
     private final int MSG_MESSAGE_HIDE_PROGRESS = 501;
+    private final int MSG_MESSAGE_ERROR_DIALOG = 502;
 
     private Detecter detecter;
 
@@ -126,6 +127,13 @@ public class CameraActivity extends BaseActivity implements OnDetecterListener{
                 case MSG_MESSAGE_HIDE_PROGRESS:
                     progressDialog.hide();
                     break;
+                case MSG_MESSAGE_ERROR_DIALOG:
+                    new MaterialDialog.Builder(CameraActivity.this)
+                            .title("실패")
+                            .content("인식에 실패하였습니다.")
+                            .positiveText("확인")
+                            .show();
+                    break;
                 default:
                     break;
             }
@@ -137,6 +145,9 @@ public class CameraActivity extends BaseActivity implements OnDetecterListener{
         super.onDestroy();
         cameraView.stop();
         detecter.onDestroy();
+        if(progressDialog != null){
+            progressDialog.dismiss();
+        }
     }
 
     @Override
@@ -145,9 +156,14 @@ public class CameraActivity extends BaseActivity implements OnDetecterListener{
         handler.sendMessage(handler.obtainMessage(MSG_MESSAGE_HIDE_PROGRESS));
         ArrayList<Classifier.Recognition> list = new ArrayList<>();
         list.addAll(results);
-        Intent intent = new Intent(CameraActivity.this, DetailActivity.class);
-        intent.putExtra("data", list);
-        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-        startActivity(intent);
+        if(list.size() > 0) {
+            Intent intent = new Intent(CameraActivity.this, DetailActivity.class);
+            intent.putExtra("data", list);
+            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            startActivity(intent);
+            overridePendingTransition(R.anim.slide_up_info, R.anim.no_change);
+        }else{
+            handler.sendMessage(handler.obtainMessage(MSG_MESSAGE_ERROR_DIALOG));
+        }
     }
 }

@@ -34,6 +34,7 @@ public class StartActivity extends BaseActivity implements OnDetecterListener{
     private MyHandler handler = new MyHandler();
     private final int MSG_MESSAGE_SHOW_PROGRESS = 500;
     private final int MSG_MESSAGE_HIDE_PROGRESS = 501;
+    private final int MSG_MESSAGE_ERROR_DIALOG = 502;
 
     private Detecter detecter;
     private Executor executor = Executors.newSingleThreadExecutor();
@@ -173,6 +174,13 @@ public class StartActivity extends BaseActivity implements OnDetecterListener{
                 case MSG_MESSAGE_HIDE_PROGRESS:
                     progressDialog.hide();
                     break;
+                case MSG_MESSAGE_ERROR_DIALOG:
+                    new MaterialDialog.Builder(StartActivity.this)
+                            .title("실패")
+                            .content("인식에 실패하였습니다.")
+                            .positiveText("확인")
+                            .show();
+                    break;
                 default:
                     break;
             }
@@ -211,8 +219,13 @@ public class StartActivity extends BaseActivity implements OnDetecterListener{
         handler.sendMessage(handler.obtainMessage(MSG_MESSAGE_HIDE_PROGRESS));
         ArrayList<Classifier.Recognition> list = new ArrayList<>();
         list.addAll(results);
-        Intent intent = new Intent(StartActivity.this, DetailActivity.class);
-        intent.putExtra("data", list);
-        startActivity(intent);
+        if(list.size() > 0) {
+            Intent intent = new Intent(StartActivity.this, DetailActivity.class);
+            intent.putExtra("data", list);
+            startActivity(intent);
+            overridePendingTransition(R.anim.slide_up_info, R.anim.no_change);
+        }else{
+            handler.sendMessage(handler.obtainMessage(MSG_MESSAGE_ERROR_DIALOG));
+        }
     }
 }
