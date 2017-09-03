@@ -6,7 +6,6 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Handler;
 import android.os.Message;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -16,6 +15,7 @@ import com.afollestad.materialdialogs.Theme;
 import com.flurgle.camerakit.CameraKit;
 import com.flurgle.camerakit.CameraListener;
 import com.flurgle.camerakit.CameraView;
+import com.github.ppamorim.dragger.DraggerPosition;
 import com.karumi.dexter.Dexter;
 import com.karumi.dexter.MultiplePermissionsReport;
 import com.karumi.dexter.PermissionToken;
@@ -29,8 +29,6 @@ import ga.twpooi.detectseoul.BaseActivity;
 import ga.twpooi.detectseoul.Classifier;
 import ga.twpooi.detectseoul.Detecter;
 import ga.twpooi.detectseoul.R;
-import ga.twpooi.detectseoul.StartActivity;
-import ga.twpooi.detectseoul.TensorFlowImageClassifier;
 import ga.twpooi.detectseoul.util.OnDetecterListener;
 
 public class CameraActivity extends BaseActivity implements OnDetecterListener{
@@ -158,10 +156,11 @@ public class CameraActivity extends BaseActivity implements OnDetecterListener{
         list.addAll(results);
         if(list.size() > 0) {
             Intent intent = new Intent(CameraActivity.this, DetailActivity.class);
+            intent.putExtra("drag_position", DraggerPosition.TOP);
             intent.putExtra("data", list);
             intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
             startActivity(intent);
-            overridePendingTransition(R.anim.slide_up_info, R.anim.no_change);
+//            overridePendingTransition(R.anim.slide_up_info, R.anim.no_change);
         }else{
             handler.sendMessage(handler.obtainMessage(MSG_MESSAGE_ERROR_DIALOG));
         }

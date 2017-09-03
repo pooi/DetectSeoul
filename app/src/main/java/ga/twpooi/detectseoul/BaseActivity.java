@@ -2,10 +2,12 @@ package ga.twpooi.detectseoul;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.content.res.TypedArray;
 import android.os.Build;
 import android.support.design.widget.Snackbar;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
+import android.util.TypedValue;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
@@ -71,6 +73,17 @@ public class BaseActivity extends AppCompatActivity {
             window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
             window.setStatusBarColor(ContextCompat.getColor(getApplicationContext(), R.color.black));
         }
+    }
+
+//    Observable ScrollView
+    protected int getActionBarSize() {
+        TypedValue typedValue = new TypedValue();
+        int[] textSizeAttr = new int[]{R.attr.actionBarSize};
+        int indexOfAttrTextSize = 0;
+        TypedArray a = obtainStyledAttributes(typedValue.data, textSizeAttr);
+        int actionBarSize = a.getDimensionPixelSize(indexOfAttrTextSize, -1);
+        a.recycle();
+        return actionBarSize;
     }
 
 }

@@ -43,6 +43,7 @@
                 <category android:name="ga.twpooi.detectseoul" />
             </intent-filter>
         </activity>
+
         <activity android:name="com.yongchun.library.view.ImageSelectorActivity" />
         <activity android:name="com.yongchun.library.view.ImagePreviewActivity" />
         <activity android:name="com.yongchun.library.view.ImageCropActivity" />

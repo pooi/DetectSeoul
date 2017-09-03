@@ -1,12 +1,12 @@
 package ga.twpooi.detectseoul;
 
+import android.Manifest;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Handler;
 import android.os.Message;
 import android.support.annotation.NonNull;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.InputType;
 import android.view.View;
@@ -16,6 +16,12 @@ import android.widget.TextView;
 
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.afollestad.materialdialogs.Theme;
+import com.github.ppamorim.dragger.DraggerPosition;
+import com.karumi.dexter.Dexter;
+import com.karumi.dexter.MultiplePermissionsReport;
+import com.karumi.dexter.PermissionToken;
+import com.karumi.dexter.listener.PermissionRequest;
+import com.karumi.dexter.listener.multi.MultiplePermissionsListener;
 import com.yongchun.library.view.ImageSelectorActivity;
 
 import java.io.IOException;
@@ -80,6 +86,16 @@ public class StartActivity extends BaseActivity implements OnDetecterListener{
                 .progressIndeterminateStyle(true)
                 .theme(Theme.LIGHT)
                 .build();
+
+        Dexter.withActivity(this)
+                .withPermissions(
+                        Manifest.permission.READ_EXTERNAL_STORAGE,
+                        Manifest.permission.WRITE_EXTERNAL_STORAGE,
+                        Manifest.permission.CAMERA
+                ).withListener(new MultiplePermissionsListener() {
+            @Override public void onPermissionsChecked(MultiplePermissionsReport report) {/* ... */}
+            @Override public void onPermissionRationaleShouldBeShown(List<PermissionRequest> permissions, PermissionToken token) {/* ... */}
+        }).check();
 
     }
 
@@ -221,9 +237,10 @@ public class StartActivity extends BaseActivity implements OnDetecterListener{
         list.addAll(results);
         if(list.size() > 0) {
             Intent intent = new Intent(StartActivity.this, DetailActivity.class);
+            intent.putExtra("drag_position", DraggerPosition.TOP);
             intent.putExtra("data", list);
             startActivity(intent);
-            overridePendingTransition(R.anim.slide_up_info, R.anim.no_change);
+//            overridePendingTransition(R.anim.slide_up_info, R.anim.no_change);
         }else{
             handler.sendMessage(handler.obtainMessage(MSG_MESSAGE_ERROR_DIALOG));
         }
