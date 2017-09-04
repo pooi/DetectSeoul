@@ -5,6 +5,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.FrameLayout;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -17,13 +18,16 @@ import com.github.ppamorim.dragger.DraggerPosition;
 import com.github.ppamorim.dragger.DraggerView;
 import com.nineoldandroids.view.ViewHelper;
 import com.nineoldandroids.view.ViewPropertyAnimator;
+import com.squareup.picasso.Picasso;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import ga.twpooi.detectseoul.BaseActivity;
 import ga.twpooi.detectseoul.Classifier;
 import ga.twpooi.detectseoul.R;
+import ga.twpooi.detectseoul.util.Attraction;
 
 public class DetailActivity extends BaseActivity implements ObservableScrollViewCallbacks {
 
@@ -42,6 +46,10 @@ public class DetailActivity extends BaseActivity implements ObservableScrollView
 
     private DraggerView draggerView;
 
+    private ImageView img_main;
+    private TextView tv_content;
+
+    private Attraction attraction;
     private ArrayList<Classifier.Recognition> data;
 
     @Override
@@ -51,8 +59,8 @@ public class DetailActivity extends BaseActivity implements ObservableScrollView
 
         Intent intent = getIntent();
         data = (ArrayList<Classifier.Recognition>)intent.getSerializableExtra("data");
+        attraction = (Attraction)intent.getSerializableExtra("attraction");
 
-        draggerInit();
         init();
 
 
@@ -83,6 +91,21 @@ public class DetailActivity extends BaseActivity implements ObservableScrollView
 
     private void init(){
 
+        draggerInit();
+        initObserval();
+
+        mTitleView.setText(attraction.title);
+        img_main = (ImageView)findViewById(R.id.image);
+        Picasso.with(getApplicationContext())
+                .load(attraction.picture.get(0))
+                .into(img_main);
+        tv_content = (TextView)findViewById(R.id.tv_content);
+        tv_content.setText(attraction.contents);
+
+    }
+
+    private void initObserval(){
+
         mFlexibleSpaceImageHeight = getResources().getDimensionPixelSize(R.dimen.flexible_space_image_height);
         mFlexibleSpaceShowFabOffset = getResources().getDimensionPixelSize(R.dimen.flexible_space_show_fab_offset);
         mActionBarSize = 0;//getActionBarSize();
@@ -92,7 +115,6 @@ public class DetailActivity extends BaseActivity implements ObservableScrollView
         mScrollView = (ObservableScrollView) findViewById(R.id.scroll);
         mScrollView.setScrollViewCallbacks(this);
         mTitleView = (TextView) findViewById(R.id.title);
-        mTitleView.setText(data.get(0).getTitle());
         setTitle(null);
         mFab = findViewById(R.id.fab);
         mFab.setOnClickListener(new View.OnClickListener() {

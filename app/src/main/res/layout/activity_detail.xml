@@ -42,13 +42,13 @@
             android:layout_width="match_parent"
             android:layout_height="@dimen/flexible_space_image_height"
             android:scaleType="centerCrop"
-            android:src="@drawable/example" />
+            />
 
         <View
             android:id="@+id/overlay"
             android:layout_width="match_parent"
             android:layout_height="@dimen/flexible_space_image_height"
-            android:background="@color/half_transparent"
+            android:background="@color/quar_transparent"
             />
 
         <com.github.ksoichiro.android.observablescrollview.ObservableScrollView
@@ -70,6 +70,7 @@
                     android:background="@android:color/transparent" />
 
                 <TextView
+                    android:id="@+id/tv_content"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:background="@color/transparency"
@@ -77,9 +78,9 @@
                     android:paddingLeft="@dimen/activity_horizontal_margin"
                     android:paddingRight="@dimen/activity_horizontal_margin"
                     android:paddingTop="@dimen/activity_vertical_margin"
-                    android:text="@string/lipsum"
                     android:textColor="@color/white"
                     />
+
             </LinearLayout>
         </com.github.ksoichiro.android.observablescrollview.ObservableScrollView>
 
@@ -112,7 +113,8 @@
             android:layout_height="wrap_content"
             android:layout_gravity="left|top"
             android:scaleType="center"
-            app:fab_colorNormal="@color/colorAccent"
-            app:fab_colorPressed="@color/colorAccent" />
+            app:fab_type="mini"
+            app:fab_colorNormal="@color/white"
+            app:fab_colorPressed="@color/white" />
     </FrameLayout>
 </com.github.ppamorim.dragger.DraggerView>

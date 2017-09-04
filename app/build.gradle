@@ -54,5 +54,8 @@ dependencies {
     compile 'com.nineoldandroids:library:2.4.0'
     compile 'com.melnykov:floatingactionbutton:1.0.7'
     compile 'com.github.ppamorim:dragger:1.2'
+    compile 'com.flaviofaria:kenburnsview:1.0.7'
+    compile 'com.squareup.picasso:picasso:2.5.2'
+    compile 'jp.wasabeef:picasso-transformations:2.1.0'
     testCompile 'junit:junit:4.12'
 }

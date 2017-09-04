@@ -18,6 +18,7 @@
     <color name="gray">#626262</color>
     <color name="light_gray">#bababa</color>
     <color name="light_gray2">#f6f6f6</color>
+    <color name="quar_transparent">#55000000</color>
     <color name="half_transparent">#99000000</color>
     <color name="transparent">#CD000000</color>
     <color name="linecolor">#bebebe</color>
