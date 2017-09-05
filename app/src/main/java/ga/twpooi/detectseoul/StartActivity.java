@@ -108,6 +108,7 @@ public class StartActivity extends BaseActivity implements OnDetecterListener{
                 .progress(true, 0)
                 .progressIndeterminateStyle(true)
                 .theme(Theme.LIGHT)
+                .cancelable(false)
                 .build();
     }
 

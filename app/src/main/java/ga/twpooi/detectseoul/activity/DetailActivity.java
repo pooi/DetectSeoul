@@ -1,11 +1,17 @@
 package ga.twpooi.detectseoul.activity;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.view.ViewPager;
 import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -16,6 +22,7 @@ import com.github.ksoichiro.android.observablescrollview.ScrollUtils;
 import com.github.ppamorim.dragger.DraggerCallback;
 import com.github.ppamorim.dragger.DraggerPosition;
 import com.github.ppamorim.dragger.DraggerView;
+import com.matthewtamlin.sliding_intro_screen_library.indicators.DotIndicator;
 import com.nineoldandroids.view.ViewHelper;
 import com.nineoldandroids.view.ViewPropertyAnimator;
 import com.squareup.picasso.Picasso;
@@ -27,7 +34,9 @@ import java.util.HashMap;
 import ga.twpooi.detectseoul.BaseActivity;
 import ga.twpooi.detectseoul.Classifier;
 import ga.twpooi.detectseoul.R;
+import ga.twpooi.detectseoul.fragment.SimplePhotoFragment;
 import ga.twpooi.detectseoul.util.Attraction;
+import ga.twpooi.detectseoul.util.CustomViewPager;
 
 public class DetailActivity extends BaseActivity implements ObservableScrollViewCallbacks {
 
@@ -48,6 +57,10 @@ public class DetailActivity extends BaseActivity implements ObservableScrollView
 
     private ImageView img_main;
     private TextView tv_content;
+    private RelativeLayout rl_picture;
+    private CustomViewPager viewPager;
+    private NavigationAdapter pagerAdapter;
+    private DotIndicator dotIndicator;
 
     private Attraction attraction;
     private ArrayList<Classifier.Recognition> data;
@@ -102,6 +115,11 @@ public class DetailActivity extends BaseActivity implements ObservableScrollView
         tv_content = (TextView)findViewById(R.id.tv_content);
         tv_content.setText(attraction.contents);
 
+        rl_picture = (RelativeLayout)findViewById(R.id.rl_picture);
+        viewPager = (CustomViewPager) findViewById(R.id.view_pager);
+        dotIndicator = (DotIndicator) findViewById(R.id.main_indicator_ad);
+        loadViewPager();
+
     }
 
     private void initObserval(){
@@ -147,7 +165,75 @@ public class DetailActivity extends BaseActivity implements ObservableScrollView
 
     }
 
+    private void loadViewPager(){
 
+        pagerAdapter = new NavigationAdapter(getSupportFragmentManager(), attraction.picture);
+        viewPager.setOffscreenPageLimit(attraction.picture.size());
+        viewPager.setAdapter(pagerAdapter);
+//        viewPager.setPageMargin(0);
+        viewPager.setClipChildren(false);
+
+        dotIndicator.setSelectedDotColor(Color.parseColor("#FFFFFF"));
+        dotIndicator.setUnselectedDotColor(Color.parseColor("#CFCFCF"));
+        dotIndicator.setNumberOfItems(attraction.picture.size());
+        dotIndicator.setSelectedItem(0, false);
+        viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+            }
+
+            @Override
+            public void onPageSelected(int position) {
+                dotIndicator.setSelectedItem(position, true);
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+
+            }
+        });
+
+    }
+
+    private static class NavigationAdapter extends FragmentPagerAdapter {
+
+        private Fragment[] fragments;
+        private ArrayList<String> list;
+
+        public NavigationAdapter(FragmentManager fm, ArrayList<String> list){
+            super(fm);
+            this.list = list;
+            fragments = new Fragment[list.size()];
+        }
+
+        @Override
+        public Fragment getItem(int position) {
+            Fragment f;
+            final int pattern = position % list.size();
+
+            if(fragments[pattern] == null) {
+                f = new SimplePhotoFragment();
+                Bundle bdl = new Bundle(1);
+                bdl.putInt("position", pattern);
+                bdl.putSerializable("img", list.get(pattern));
+                f.setArguments(bdl);
+                return f;
+            }else{
+                return fragments[pattern];
+            }
+//            f = new ArticleItemFragment();
+
+//            return f;
+        }
+
+        @Override
+        public int getCount(){
+            return list.size();
+        }
+
+
+    }
 
     @Override public void onBackPressed() {
         draggerView.closeActivity();
