@@ -11,6 +11,7 @@ import android.support.v4.view.ViewPager;
 import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -57,6 +58,7 @@ public class DetailActivity extends BaseActivity implements ObservableScrollView
 
     private ImageView img_main;
     private TextView tv_content;
+    private LinearLayout li_detail;
     private RelativeLayout rl_picture;
     private CustomViewPager viewPager;
     private NavigationAdapter pagerAdapter;
@@ -114,6 +116,9 @@ public class DetailActivity extends BaseActivity implements ObservableScrollView
                 .into(img_main);
         tv_content = (TextView)findViewById(R.id.tv_content);
         tv_content.setText(attraction.contents);
+
+        li_detail = (LinearLayout)findViewById(R.id.li_detail);
+        makeDetailInfo();
 
         rl_picture = (RelativeLayout)findViewById(R.id.rl_picture);
         viewPager = (CustomViewPager) findViewById(R.id.view_pager);
@@ -193,6 +198,36 @@ public class DetailActivity extends BaseActivity implements ObservableScrollView
 
             }
         });
+
+    }
+
+    private void makeDetailInfo(){
+
+        li_detail.removeAllViews();
+
+        if(attraction.address != null && !"".equals(attraction.address)){
+            View v = getLayoutInflater().inflate(R.layout.detail_information_custom_item, null, false);
+            TextView tv_title = (TextView)v.findViewById(R.id.tv_title);
+            TextView tv_content = (TextView)v.findViewById(R.id.tv_content);
+
+            tv_title.setText("주소");
+            tv_content.setText(attraction.address);
+
+            li_detail.addView(v);
+        }
+
+        for(String[] strs : attraction.detail){
+
+            View v = getLayoutInflater().inflate(R.layout.detail_information_custom_item, null, false);
+            TextView tv_title = (TextView)v.findViewById(R.id.tv_title);
+            TextView tv_content = (TextView)v.findViewById(R.id.tv_content);
+
+            tv_title.setText(strs[0]);
+            tv_content.setText(strs[1]);
+
+            li_detail.addView(v);
+
+        }
 
     }
 
