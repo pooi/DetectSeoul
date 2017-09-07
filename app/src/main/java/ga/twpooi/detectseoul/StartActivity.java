@@ -12,7 +12,9 @@ import android.text.InputType;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.afollestad.materialdialogs.Theme;
@@ -22,6 +24,10 @@ import com.karumi.dexter.MultiplePermissionsReport;
 import com.karumi.dexter.PermissionToken;
 import com.karumi.dexter.listener.PermissionRequest;
 import com.karumi.dexter.listener.multi.MultiplePermissionsListener;
+import com.mingle.entity.MenuEntity;
+import com.mingle.sweetpick.DimEffect;
+import com.mingle.sweetpick.SweetSheet;
+import com.mingle.sweetpick.ViewPagerDelegate;
 import com.yongchun.library.view.ImageSelectorActivity;
 
 import java.io.IOException;
@@ -50,12 +56,14 @@ public class StartActivity extends BaseActivity implements OnDetecterListener{
     private Detecter detecter;
     private Executor executor = Executors.newSingleThreadExecutor();
 
+    private RelativeLayout root;
     private ImageView backgroundImg;
     private TextView tv_title;
     private TextView tv_sub_title;
     private Button searchBtn, detectBtn;
 
     private MaterialDialog progressDialog;
+    private SweetSheet mSweetSheet2;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -68,6 +76,7 @@ public class StartActivity extends BaseActivity implements OnDetecterListener{
 
     private void init(){
 
+        root = (RelativeLayout)findViewById(R.id.root);
         backgroundImg = (ImageView)findViewById(R.id.background_img);
         tv_title = (TextView)findViewById(R.id.tv_title);
         tv_sub_title = (TextView)findViewById(R.id.tv_sub_title);
@@ -79,13 +88,15 @@ public class StartActivity extends BaseActivity implements OnDetecterListener{
             public void onClick(View view) {
 //                Intent intent = new Intent(StartActivity.this, MainActivity.class);
 //                startActivity(intent);
-                showDetectDialog();
+//                showDetectDialog();
+                mSweetSheet2.toggle();
             }
         });
 
         detecter = new Detecter(getApplicationContext(), this);
 
         initProgressDialog();
+        initSweetDialog();
 
         Dexter.withActivity(this)
                 .withPermissions(
@@ -96,6 +107,23 @@ public class StartActivity extends BaseActivity implements OnDetecterListener{
             @Override public void onPermissionsChecked(MultiplePermissionsReport report) {/* ... */}
             @Override public void onPermissionRationaleShouldBeShown(List<PermissionRequest> permissions, PermissionToken token) {/* ... */}
         }).check();
+
+    }
+
+    private void initSweetDialog(){
+
+        mSweetSheet2 = new SweetSheet(root);
+        mSweetSheet2.setMenuList(R.menu.menu_select);
+        mSweetSheet2.setDelegate(new ViewPagerDelegate());
+        mSweetSheet2.setBackgroundEffect(new DimEffect(0.2f));
+        mSweetSheet2.setOnMenuItemClickListener(new SweetSheet.OnMenuItemClickListener() {
+            @Override
+            public boolean onItemClick(int position, MenuEntity menuEntity1) {
+
+                Toast.makeText(StartActivity.this, menuEntity1.title + "  " + position, Toast.LENGTH_SHORT).show();
+                return true;
+            }
+        });
 
     }
 

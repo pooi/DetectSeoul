@@ -58,5 +58,6 @@ dependencies {
     compile 'com.squareup.picasso:picasso:2.5.2'
     compile 'jp.wasabeef:picasso-transformations:2.1.0'
     compile 'com.matthew-tamlin:sliding-intro-screen:3.1.0'
+    compile 'com.github.zzz40500:AndroidSweetSheet:1.1.0'
     testCompile 'junit:junit:4.12'
 }
