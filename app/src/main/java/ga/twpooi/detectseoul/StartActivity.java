@@ -9,6 +9,7 @@ import android.os.Message;
 import android.support.annotation.NonNull;
 import android.os.Bundle;
 import android.text.InputType;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -25,6 +26,7 @@ import com.karumi.dexter.PermissionToken;
 import com.karumi.dexter.listener.PermissionRequest;
 import com.karumi.dexter.listener.multi.MultiplePermissionsListener;
 import com.mingle.entity.MenuEntity;
+import com.mingle.sweetpick.CustomDelegate;
 import com.mingle.sweetpick.DimEffect;
 import com.mingle.sweetpick.SweetSheet;
 import com.mingle.sweetpick.ViewPagerDelegate;
@@ -113,15 +115,43 @@ public class StartActivity extends BaseActivity implements OnDetecterListener{
     private void initSweetDialog(){
 
         mSweetSheet2 = new SweetSheet(root);
-        mSweetSheet2.setMenuList(R.menu.menu_select);
-        mSweetSheet2.setDelegate(new ViewPagerDelegate());
+//        mSweetSheet2.setMenuList(R.menu.menu_select);
+//        mSweetSheet2.setDelegate(new ViewPagerDelegate());
+//        mSweetSheet2.setBackgroundEffect(new DimEffect(0.2f));
+//        mSweetSheet2.setOnMenuItemClickListener(new SweetSheet.OnMenuItemClickListener() {
+//            @Override
+//            public boolean onItemClick(int position, MenuEntity menuEntity1) {
+//
+//                Toast.makeText(StartActivity.this, menuEntity1.title + "  " + position, Toast.LENGTH_SHORT).show();
+//                return true;
+//            }
+//        });
+        CustomDelegate customDelegate = new CustomDelegate(true,
+                CustomDelegate.AnimationType.DuangLayoutAnimation);
+        View view = LayoutInflater.from(this).inflate(R.layout.layout_select_method, null, false);
+        customDelegate.setCustomView(view);
+        mSweetSheet2.setDelegate(customDelegate);
         mSweetSheet2.setBackgroundEffect(new DimEffect(0.2f));
-        mSweetSheet2.setOnMenuItemClickListener(new SweetSheet.OnMenuItemClickListener() {
+        view.findViewById(R.id.rl_gallery).setOnClickListener(new View.OnClickListener() {
             @Override
-            public boolean onItemClick(int position, MenuEntity menuEntity1) {
-
-                Toast.makeText(StartActivity.this, menuEntity1.title + "  " + position, Toast.LENGTH_SHORT).show();
-                return true;
+            public void onClick(View view) {
+                ImageSelectorActivity.start(StartActivity.this, 1, ImageSelectorActivity.MODE_SINGLE, false,false,false);
+                mSweetSheet2.toggle();
+            }
+        });
+        view.findViewById(R.id.rl_url).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                loadImgFromURL();
+                mSweetSheet2.toggle();
+            }
+        });
+        view.findViewById(R.id.rl_camera).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(StartActivity.this, CameraActivity.class);
+                startActivity(intent);
+                mSweetSheet2.toggle();
             }
         });
 
