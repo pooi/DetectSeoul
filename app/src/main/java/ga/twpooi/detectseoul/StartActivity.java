@@ -19,6 +19,7 @@ import android.widget.Toast;
 
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.afollestad.materialdialogs.Theme;
+import com.flaviofaria.kenburnsview.KenBurnsView;
 import com.github.ppamorim.dragger.DraggerPosition;
 import com.karumi.dexter.Dexter;
 import com.karumi.dexter.MultiplePermissionsReport;
@@ -30,6 +31,7 @@ import com.mingle.sweetpick.CustomDelegate;
 import com.mingle.sweetpick.DimEffect;
 import com.mingle.sweetpick.SweetSheet;
 import com.mingle.sweetpick.ViewPagerDelegate;
+import com.squareup.picasso.Picasso;
 import com.yongchun.library.view.ImageSelectorActivity;
 
 import java.io.IOException;
@@ -54,18 +56,24 @@ public class StartActivity extends BaseActivity implements OnDetecterListener{
     private final int MSG_MESSAGE_HIDE_PROGRESS = 501;
     private final int MSG_MESSAGE_ERROR_DIALOG = 502;
     private final int MSG_MESSAGE_CHANGE_PROGRESS = 503;
+    private final int MSG_MESSAGE_REFRESH_BG = 504;
 
     private Detecter detecter;
     private Executor executor = Executors.newSingleThreadExecutor();
 
     private RelativeLayout root;
-    private ImageView backgroundImg;
+    private KenBurnsView kenBurnsView;
+//    private ImageView backgroundImg;
     private TextView tv_title;
     private TextView tv_sub_title;
+    private TextView showDetailBtn;
     private Button searchBtn, detectBtn;
 
     private MaterialDialog progressDialog;
     private SweetSheet mSweetSheet2;
+
+    private Attraction bgAttraction;
+    private boolean needReload = true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -79,9 +87,21 @@ public class StartActivity extends BaseActivity implements OnDetecterListener{
     private void init(){
 
         root = (RelativeLayout)findViewById(R.id.root);
-        backgroundImg = (ImageView)findViewById(R.id.background_img);
+        kenBurnsView = (KenBurnsView)findViewById(R.id.image);
+//        backgroundImg = (ImageView)findViewById(R.id.background_img);
         tv_title = (TextView)findViewById(R.id.tv_title);
         tv_sub_title = (TextView)findViewById(R.id.tv_sub_title);
+        showDetailBtn = (TextView)findViewById(R.id.show_detail_btn);
+        showDetailBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(StartActivity.this, DetailActivity.class);
+                intent.putExtra("drag_position", DraggerPosition.TOP);
+                intent.putExtra("data", new ArrayList<>());
+                intent.putExtra("attraction", bgAttraction);
+                startActivity(intent);
+            }
+        });
         searchBtn = (Button)findViewById(R.id.search_btn);
         detectBtn = (Button)findViewById(R.id.detect_btn);
 
@@ -109,6 +129,14 @@ public class StartActivity extends BaseActivity implements OnDetecterListener{
             @Override public void onPermissionsChecked(MultiplePermissionsReport report) {/* ... */}
             @Override public void onPermissionRationaleShouldBeShown(List<PermissionRequest> permissions, PermissionToken token) {/* ... */}
         }).check();
+
+        findViewById(R.id.tv_refresh).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                getBackgroundImage();
+            }
+        });
+        getBackgroundImage();
 
     }
 
@@ -168,6 +196,38 @@ public class StartActivity extends BaseActivity implements OnDetecterListener{
                 .theme(Theme.LIGHT)
                 .cancelable(false)
                 .build();
+    }
+
+    private void getBackgroundImage(){
+
+        HashMap<String, String> map = new HashMap<>();
+        map.put("service", "getRandomLocation");
+        new ParsePHP(Information.MAIN_SERVER_ADDRESS, map) {
+
+            @Override
+            protected void afterThreadFinish(String data) {
+
+                bgAttraction = AdditionalFunc.getAttractionInfo(data);
+
+                handler.sendMessage(handler.obtainMessage(MSG_MESSAGE_REFRESH_BG));
+
+            }
+        }.start();
+
+    }
+
+    private void setBackgroundImage(){
+
+        tv_title.setText(bgAttraction.title);
+        if(bgAttraction.address == null || "".equals(bgAttraction.address)){
+            tv_sub_title.setVisibility(View.GONE);
+        }else{
+            tv_sub_title.setText(bgAttraction.address);
+        }
+        Picasso.with(getApplicationContext())
+                .load(bgAttraction.picture.get(0))
+                .into(kenBurnsView);
+
     }
 
     public void showDetectDialog(){
@@ -271,6 +331,9 @@ public class StartActivity extends BaseActivity implements OnDetecterListener{
                             .positiveText("확인")
                             .show();
                     break;
+                case MSG_MESSAGE_REFRESH_BG:
+                    setBackgroundImage();
+                    break;
                 default:
                     break;
             }
@@ -320,6 +383,21 @@ public class StartActivity extends BaseActivity implements OnDetecterListener{
         }else{
             handler.sendMessage(handler.obtainMessage(MSG_MESSAGE_ERROR_DIALOG));
         }
+    }
+
+    @Override
+    public void onResume(){
+        super.onResume();
+        if(needReload){
+            needReload = false;
+            getBackgroundImage();
+        }
+    }
+
+    @Override
+    public void onPause(){
+        super.onPause();
+        needReload = true;
     }
 
     private void loadAttractionInfo(final ArrayList<Classifier.Recognition> list){
