@@ -44,6 +44,7 @@ import java.util.concurrent.Executors;
 
 import ga.twpooi.detectseoul.activity.CameraActivity;
 import ga.twpooi.detectseoul.activity.DetailActivity;
+import ga.twpooi.detectseoul.activity.SearchListActivity;
 import ga.twpooi.detectseoul.util.AdditionalFunc;
 import ga.twpooi.detectseoul.util.Attraction;
 import ga.twpooi.detectseoul.util.OnDetecterListener;
@@ -103,8 +104,13 @@ public class StartActivity extends BaseActivity implements OnDetecterListener{
             }
         });
         searchBtn = (Button)findViewById(R.id.search_btn);
+        searchBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                searchAttraction();
+            }
+        });
         detectBtn = (Button)findViewById(R.id.detect_btn);
-
         detectBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -224,6 +230,7 @@ public class StartActivity extends BaseActivity implements OnDetecterListener{
         }else{
             tv_sub_title.setText(bgAttraction.address);
         }
+        showDetailBtn.setVisibility(View.VISIBLE);
         Picasso.with(getApplicationContext())
                 .load(bgAttraction.picture.get(0))
                 .into(kenBurnsView);
@@ -302,6 +309,30 @@ public class StartActivity extends BaseActivity implements OnDetecterListener{
 
                             }
                         });
+
+                    }
+                })
+                .show();
+
+    }
+
+    private void searchAttraction(){
+
+        new MaterialDialog.Builder(StartActivity.this)
+                .title("입력")
+                .inputType(InputType.TYPE_CLASS_TEXT |
+                        InputType.TYPE_TEXT_VARIATION_PERSON_NAME |
+                        InputType.TYPE_TEXT_FLAG_CAP_WORDS)
+                .theme(Theme.LIGHT)
+                .positiveText("검색")
+                .negativeText("취소")
+                .input("검색어를 입력해주세요.", "", new MaterialDialog.InputCallback() {
+                    @Override
+                    public void onInput(@NonNull MaterialDialog dialog, CharSequence input) {
+
+                        Intent intent = new Intent(StartActivity.this, SearchListActivity.class);
+                        intent.putExtra("search", input.toString());
+                        startActivity(intent);
 
                     }
                 })
