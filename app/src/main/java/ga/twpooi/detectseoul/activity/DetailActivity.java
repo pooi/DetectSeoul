@@ -2,6 +2,7 @@ package ga.twpooi.detectseoul.activity;
 
 import android.content.Intent;
 import android.graphics.Color;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -143,7 +144,9 @@ public class DetailActivity extends BaseActivity implements ObservableScrollView
         mFab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(DetailActivity.this, "FAB is clicked", Toast.LENGTH_SHORT).show();
+//                Toast.makeText(DetailActivity.this, "FAB is clicked", Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent (Intent.ACTION_VIEW, Uri.parse(attraction.url));
+                startActivity(intent);
             }
         });
         mFabMargin = getResources().getDimensionPixelSize(R.dimen.margin_standard);
