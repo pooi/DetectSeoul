@@ -107,7 +107,7 @@ public class StartActivity extends BaseActivity implements OnDetecterListener{
         searchBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                searchAttraction();
+                showSearchAttractionDialog();
             }
         });
         detectBtn = (Button)findViewById(R.id.detect_btn);
@@ -316,7 +316,7 @@ public class StartActivity extends BaseActivity implements OnDetecterListener{
 
     }
 
-    private void searchAttraction(){
+    private void showSearchAttractionDialog(){
 
         new MaterialDialog.Builder(StartActivity.this)
                 .title("입력")
@@ -330,13 +330,36 @@ public class StartActivity extends BaseActivity implements OnDetecterListener{
                     @Override
                     public void onInput(@NonNull MaterialDialog dialog, CharSequence input) {
 
-                        Intent intent = new Intent(StartActivity.this, SearchListActivity.class);
-                        intent.putExtra("search", input.toString());
-                        startActivity(intent);
+                        handler.sendMessage(handler.obtainMessage(MSG_MESSAGE_SHOW_PROGRESS));
+                        searchAttraction(input.toString());
 
                     }
                 })
                 .show();
+
+    }
+
+    private void searchAttraction(final String query){
+
+        HashMap<String, String> map = new HashMap<>();
+        map.put("service", "searchLocation");
+        map.put("query", query);
+        new ParsePHP(Information.MAIN_SERVER_ADDRESS, map) {
+
+            @Override
+            protected void afterThreadFinish(String data) {
+
+                ArrayList<Attraction> list = AdditionalFunc.getAttractionInfoList(data);
+
+                handler.sendMessage(handler.obtainMessage(MSG_MESSAGE_HIDE_PROGRESS));
+
+                Intent intent = new Intent(StartActivity.this, SearchListActivity.class);
+                intent.putExtra("search", query);
+                intent.putExtra("list", list);
+                startActivity(intent);
+
+            }
+        }.start();
 
     }
 

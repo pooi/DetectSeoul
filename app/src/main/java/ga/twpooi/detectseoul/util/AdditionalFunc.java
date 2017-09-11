@@ -187,8 +187,18 @@ public class AdditionalFunc {
                 attraction.telephone = (String)temp.get("telephone");
                 attraction.web = (String)temp.get("web");
                 attraction.url = (String)temp.get("url");
-                attraction.lat = Double.parseDouble((String)temp.get("lat"));
-                attraction.lng = Double.parseDouble((String)temp.get("lng"));
+                String lat = (String)temp.get("lat");
+                String lng = (String)temp.get("lng");
+                if("".equals(lat)){
+                    attraction.lat = 0.0;
+                }else{
+                    attraction.lat = Double.parseDouble(lat);
+                }
+                if("".equals(lng)){
+                    attraction.lng = 0.0;
+                }else{
+                    attraction.lng = Double.parseDouble(lng);
+                }
 
                 String cTemp = (String)temp.get("categorize");
                 ArrayList<String> cList = new ArrayList<>();
@@ -236,6 +246,90 @@ public class AdditionalFunc {
         }else{
             return null;
         }
+
+    }
+
+    public static ArrayList<Attraction> getAttractionInfoList(String data){
+
+        ArrayList<Attraction> list = new ArrayList<>();
+
+        try {
+            JSONObject jObject = new JSONObject(data);
+            JSONArray results = jObject.getJSONArray("result");
+            String countTemp = (String)jObject.get("num_result");
+            int count = Integer.parseInt(countTemp);
+
+            for ( int i = 0; i < count; ++i ) {
+                JSONObject temp = results.getJSONObject(i);
+
+                Attraction attraction = new Attraction();
+
+                attraction.id = (String)temp.get("id");
+                attraction.title = (String)temp.get("title");
+                attraction.sContents = (String)temp.get("sContents");
+                attraction.sContents.replaceAll("   ", "\n");
+                attraction.contents = (String)temp.get("contents");
+                attraction.contents.replaceAll("   ", "\n");
+                attraction.address = (String)temp.get("address");
+                attraction.district = (String)temp.get("district");
+                attraction.telephone = (String)temp.get("telephone");
+                attraction.web = (String)temp.get("web");
+                attraction.url = (String)temp.get("url");
+                String lat = (String)temp.get("lat");
+                String lng = (String)temp.get("lng");
+                if("".equals(lat)){
+                    attraction.lat = 0.0;
+                }else{
+                    attraction.lat = Double.parseDouble(lat);
+                }
+                if("".equals(lng)){
+                    attraction.lng = 0.0;
+                }else{
+                    attraction.lng = Double.parseDouble(lng);
+                }
+
+                String cTemp = (String)temp.get("categorize");
+                ArrayList<String> cList = new ArrayList<>();
+                for(String s : cTemp.split(",")){
+                    if("".equals(s)){
+                        continue;
+                    }
+                    cList.add(s);
+                }
+                attraction.categorize = cList;
+
+                String mainImage = (String)temp.get("mainImage");
+                String subImage = (String)temp.get("subImage");
+                ArrayList<String> pictureList = new ArrayList<>();
+                pictureList.add(mainImage);
+                for(String s : subImage.split(",")){
+                    if("".equals(s)){
+                        continue;
+                    }
+                    pictureList.add(s);
+                }
+                attraction.picture = pictureList;
+
+                String detailInfo = (String)temp.get("detail");
+                ArrayList<String[]> detailList = new ArrayList<>();
+                for(String s : detailInfo.split("&&")){
+                    if("".equals(s)){
+                        continue;
+                    }
+                    String[] strs = s.split("##");
+                    detailList.add(strs);
+                }
+                attraction.detail = detailList;
+
+                list.add(attraction);
+
+            }
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        return list;
 
     }
 
