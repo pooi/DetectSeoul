@@ -9,13 +9,14 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.github.ksoichiro.android.observablescrollview.ObservableScrollView;
 import com.github.ksoichiro.android.observablescrollview.ObservableScrollViewCallbacks;
@@ -29,9 +30,11 @@ import com.nineoldandroids.view.ViewHelper;
 import com.nineoldandroids.view.ViewPropertyAnimator;
 import com.squareup.picasso.Picasso;
 
+import net.daum.mf.map.api.MapPoint;
+import net.daum.mf.map.api.MapView;
+
 import java.lang.reflect.Field;
 import java.util.ArrayList;
-import java.util.HashMap;
 
 import ga.twpooi.detectseoul.BaseActivity;
 import ga.twpooi.detectseoul.Classifier;
@@ -126,6 +129,8 @@ public class DetailActivity extends BaseActivity implements ObservableScrollView
         dotIndicator = (DotIndicator) findViewById(R.id.main_indicator_ad);
         loadViewPager();
 
+        initMapView();
+
     }
 
     private void initObserval(){
@@ -201,6 +206,35 @@ public class DetailActivity extends BaseActivity implements ObservableScrollView
 
             }
         });
+
+    }
+
+    private void initMapView(){
+
+        if(attraction.isHaveLatLng()){
+
+            MapView mapView = new MapView(this);
+            mapView.setOnTouchListener(new View.OnTouchListener() {
+                @Override
+                public boolean onTouch(View view, MotionEvent motionEvent) {
+                    System.out.println(motionEvent);
+                    switch (motionEvent.getAction()){
+                        case MotionEvent.ACTION_DOWN:
+                            break;
+                        case MotionEvent.ACTION_CANCEL:
+                            break;
+                    }
+                    return false;
+                }
+            });
+            mapView.setMapCenterPoint(MapPoint.mapPointWithGeoCoord(attraction.lat, attraction.lng), true);
+
+            ViewGroup mapViewContainer = (ViewGroup) findViewById(R.id.map_view);
+            mapViewContainer.addView(mapView);
+
+        }else{
+            findViewById(R.id.map_view).setVisibility(View.GONE);
+        }
 
     }
 

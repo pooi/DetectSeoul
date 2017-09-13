@@ -20,6 +20,8 @@ public class Attraction implements Serializable {
         detail = new ArrayList<>();
     }
 
-
+    public boolean isHaveLatLng(){
+        return !(lat == 0.0 && lng == 0.0);
+    }
 
 }

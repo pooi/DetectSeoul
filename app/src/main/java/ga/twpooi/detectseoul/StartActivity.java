@@ -83,6 +83,8 @@ public class StartActivity extends BaseActivity implements OnDetecterListener{
 
         init();
 
+        printKeyHash();
+
     }
 
     private void init(){
