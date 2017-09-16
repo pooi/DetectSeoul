@@ -1,7 +1,9 @@
 package ga.twpooi.detectseoul.activity;
 
+import android.animation.PropertyValuesHolder;
 import android.content.Intent;
 import android.graphics.Color;
+import android.graphics.Rect;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -18,6 +20,13 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.db.chart.animation.Animation;
+import com.db.chart.listener.OnEntryClickListener;
+import com.db.chart.model.Bar;
+import com.db.chart.model.BarSet;
+import com.db.chart.renderer.XRenderer;
+import com.db.chart.tooltip.Tooltip;
+import com.db.chart.view.HorizontalBarChartView;
 import com.github.ksoichiro.android.observablescrollview.ObservableScrollView;
 import com.github.ksoichiro.android.observablescrollview.ObservableScrollViewCallbacks;
 import com.github.ksoichiro.android.observablescrollview.ScrollState;
@@ -36,6 +45,9 @@ import net.daum.mf.map.api.MapView;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Locale;
 
 import ga.twpooi.detectseoul.BaseActivity;
 import ga.twpooi.detectseoul.Classifier;
@@ -68,6 +80,10 @@ public class DetailActivity extends BaseActivity implements ObservableScrollView
     private CustomViewPager viewPager;
     private NavigationAdapter pagerAdapter;
     private DotIndicator dotIndicator;
+
+    // Chart
+    private RelativeLayout rl_chart;
+    private HorizontalBarChartView mChart;
 
     private Attraction attraction;
     private ArrayList<Classifier.Recognition> data;
@@ -131,6 +147,7 @@ public class DetailActivity extends BaseActivity implements ObservableScrollView
         loadViewPager();
 
         initMapView();
+        initChart();
 
     }
 
@@ -244,6 +261,99 @@ public class DetailActivity extends BaseActivity implements ObservableScrollView
 
         }else{
             findViewById(R.id.map_view).setVisibility(View.GONE);
+        }
+
+    }
+
+    private void initChart(){
+
+        rl_chart = (RelativeLayout)findViewById(R.id.rl_chart);
+        mChart = (HorizontalBarChartView)findViewById(R.id.chart);
+        if(data != null && data.size() > 0){
+            rl_chart.setVisibility(View.VISIBLE);
+            mChart.setVisibility(View.VISIBLE);
+            Tooltip tip = new Tooltip(getApplicationContext());
+            tip.setBackgroundColor(Color.parseColor("#f39c12"));
+
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH) {
+                tip.setEnterAnimation(PropertyValuesHolder.ofFloat(View.ALPHA, 1)).setDuration(150);
+                tip.setExitAnimation(PropertyValuesHolder.ofFloat(View.ALPHA, 0)).setDuration(150);
+            }
+
+            mChart.setTooltips(tip);
+
+            mChart.setOnEntryClickListener(new OnEntryClickListener() {
+                @Override
+                public void onClick(int setIndex, int entryIndex, Rect rect) {
+
+//                    mTextViewValue.setText(String.format(Locale.ENGLISH, "%d", (int) mValues[0][entryIndex]));
+//                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB_MR1)
+//                        mTextViewValue.animate().alpha(1).setDuration(200);
+//                    else mTextViewValue.setVisibility(View.VISIBLE);
+                }
+            });
+
+            mChart.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+
+//                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB_MR1)
+//                        mTextViewValue.animate().alpha(0).setDuration(100);
+//                    else mTextViewValue.setVisibility(View.INVISIBLE);
+                }
+            });
+            mChart.setLabelsColor(getColorId(R.color.white));
+
+            ArrayList<Classifier.Recognition> tempList = (ArrayList<Classifier.Recognition>)data.clone();
+            Collections.reverse(tempList);
+            BarSet barSet = new BarSet();
+            Bar bar;
+            for(int i=0; i<tempList.size(); i++){
+                Classifier.Recognition recognition = tempList.get(i);
+                bar = new Bar(recognition.getTitle(), recognition.getConfidence());
+                if(i==tempList.size()-1) {
+                    bar.setColor(getColorId(R.color.colorPrimary));
+                }else{
+                    bar.setColor(getColorId(R.color.white));
+                }
+                barSet.addBar(bar);
+            }
+//            for (int i = 0; i < mLabels.length; i++) {
+//                bar = new Bar(mLabels[i], mValues[0][i]);
+//                bar.setColor(getColorId(R.color.white));
+////                switch (i) {
+////                    case 0:
+////                        bar.setColor(Color.parseColor("#77c63d"));
+////                        break;
+////                    case 1:
+////                        bar.setColor(Color.parseColor("#27ae60"));
+////                        break;
+////                    case 2:
+////                        bar.setColor(Color.parseColor("#47bac1"));
+////                        break;
+////                    case 3:
+////                        bar.setColor(Color.parseColor("#16a085"));
+////                        break;
+////                    case 4:
+////                        bar.setColor(Color.parseColor("#3498db"));
+////                        break;
+////                    default:
+////                        break;
+////                }
+//                barSet.addBar(bar);
+//            }
+            mChart.addData(barSet);
+
+            int[] order = new int[data.size()];
+            for(int i=0; i<data.size(); i++){
+                order[i] = (data.size()-1) - i;
+            }
+//            int[] order = {4, 3, 2, 1, 0};
+            mChart.setXLabels(XRenderer.LabelPosition.NONE).show(new Animation().inSequence(.5f, order));
+//                    .show(new Animation().inSequence(.5f, order).withEndAction(action));
+        }else{
+            rl_chart.setVisibility(View.GONE);
+            mChart.setVisibility(View.GONE);
         }
 
     }

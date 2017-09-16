@@ -17,6 +17,7 @@
     xmlns:dragger_layout="http://schemas.android.com/apk/res-auto"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    xmlns:williamchart="http://schemas.android.com/apk/res-auto"
     android:id="@+id/dragger_view"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -133,6 +134,28 @@
                         android:layout_marginTop="10dp"
                         android:layout_below="@+id/view_pager"
                         />
+
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:id="@+id/rl_chart"
+                    android:layout_width="match_parent"
+                    android:layout_height="100dp"
+                    android:layout_marginTop="@dimen/activity_vertical_margin"
+                    android:layout_marginLeft="@dimen/activity_horizontal_margin"
+                    android:layout_marginRight="@dimen/activity_horizontal_margin"
+                    android:layout_marginBottom="@dimen/activity_vertical_margin"
+                    >
+
+                    <com.db.chart.view.HorizontalBarChartView
+                        android:id="@+id/chart"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        williamchart:chart_axis="false"
+                        williamchart:chart_axisBorderSpacing="0dp"
+                        williamchart:chart_barSpacing="4dp"
+                        williamchart:chart_fontSize="12dp"
+                        williamchart:chart_labelColor="#FF8E8A84" />
 
                 </RelativeLayout>
 
