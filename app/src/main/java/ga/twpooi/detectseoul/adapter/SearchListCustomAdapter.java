@@ -99,7 +99,7 @@ public class SearchListCustomAdapter extends RecyclerView.Adapter<SearchListCust
             public void onClick(View view) {
                 Intent intent = new Intent(context, DetailActivity.class);
                 intent.putExtra("drag_position", DraggerPosition.TOP);
-                intent.putExtra("data", list);
+                intent.putExtra("data", new ArrayList<>());
                 intent.putExtra("attraction", item);
                 onAdapterSupport.redirectActivity(intent);
             }
