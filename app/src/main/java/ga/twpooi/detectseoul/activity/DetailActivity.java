@@ -394,6 +394,27 @@ public class DetailActivity extends BaseActivity implements ObservableScrollView
 
         }
 
+        if(attraction.telephone != null && !"".equals(attraction.telephone)){
+
+            View v = getLayoutInflater().inflate(R.layout.detail_information_custom_item, null, false);
+            TextView tv_title = (TextView)v.findViewById(R.id.tv_title);
+            TextView tv_content = (TextView)v.findViewById(R.id.tv_content);
+
+            tv_title.setText("전화번호");
+            tv_content.setText(attraction.telephone);
+            tv_content.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+//                    Intent intent = new Intent (Intent.ACTION_VIEW, Uri.parse(attraction.web));
+//                    startActivity(intent);
+                }
+            });
+
+            li_detail.addView(v);
+
+        }
+
+
         for(String[] strs : attraction.detail){
 
             View v = getLayoutInflater().inflate(R.layout.detail_information_custom_item, null, false);
