@@ -407,6 +407,7 @@ public class DetailActivity extends BaseActivity implements ObservableScrollView
                 public void onClick(View v) {
 //                    Intent intent = new Intent (Intent.ACTION_VIEW, Uri.parse(attraction.web));
 //                    startActivity(intent);
+                    startActivity(new Intent("android.intent.action.DIAL", Uri.parse("tel:" + attraction.telephone)));
                 }
             });
 
