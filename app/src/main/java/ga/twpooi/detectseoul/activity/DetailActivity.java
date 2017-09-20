@@ -1,6 +1,9 @@
 package ga.twpooi.detectseoul.activity;
 
 import android.animation.PropertyValuesHolder;
+import android.content.ClipData;
+import android.content.ClipboardManager;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.Rect;
@@ -246,6 +249,33 @@ public class DetailActivity extends BaseActivity implements ObservableScrollView
                 }
 
             });
+            mapView.setPOIItemEventListener(new MapView.POIItemEventListener() {
+                @Override
+                public void onPOIItemSelected(MapView mapView, MapPOIItem mapPOIItem) {
+
+                }
+
+                @Override
+                public void onCalloutBalloonOfPOIItemTouched(MapView mapView, MapPOIItem mapPOIItem) {
+
+                }
+
+                @Override
+                public void onCalloutBalloonOfPOIItemTouched(MapView mapView, MapPOIItem mapPOIItem, MapPOIItem.CalloutBalloonButtonType calloutBalloonButtonType) {
+                    String lat = attraction.lat.toString();
+                    String lng = attraction.lng.toString();
+
+                    String uri = "daummaps://look?p=" + lat + "," + lng;
+
+                    Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(uri));
+                    startActivity(intent);
+                }
+
+                @Override
+                public void onDraggablePOIItemMoved(MapView mapView, MapPOIItem mapPOIItem, MapPoint mapPoint) {
+
+                }
+            });
             MapPOIItem marker = new MapPOIItem();
             marker.setItemName(attraction.title);
             marker.setTag(0);
@@ -424,6 +454,18 @@ public class DetailActivity extends BaseActivity implements ObservableScrollView
 
             tv_title.setText(strs[0]);
             tv_content.setText(strs[1]);
+
+            final String content = strs[1];
+
+            tv_content.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    ClipboardManager clipboard = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
+                    ClipData clip = ClipData.newPlainText("text", content);
+                    clipboard.setPrimaryClip(clip);
+                    showSnackbar("클립보드에 저장했습니다.");
+                }
+            });
 
             li_detail.addView(v);
 
