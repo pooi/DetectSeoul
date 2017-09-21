@@ -84,6 +84,8 @@ public class DetailActivity extends BaseActivity implements ObservableScrollView
     private NavigationAdapter pagerAdapter;
     private DotIndicator dotIndicator;
 
+    private RelativeLayout rl_mapView;
+
     // Chart
     private RelativeLayout rl_chart;
     private HorizontalBarChartView mChart;
@@ -232,50 +234,27 @@ public class DetailActivity extends BaseActivity implements ObservableScrollView
 
     private void initMapView(){
 
+        rl_mapView = (RelativeLayout)findViewById(R.id.rl_map_view);
+
         if(attraction.isHaveLatLng()){
+            rl_mapView.setVisibility(View.VISIBLE);
 
             MapView mapView = new MapView(this);
-            mapView.setOnTouchListener(new View.OnTouchListener() {
-                @Override
-                public boolean onTouch(View view, MotionEvent motionEvent) {
-                    System.out.println(motionEvent);
-                    switch (motionEvent.getAction()){
-                        case MotionEvent.ACTION_DOWN:
-                            break;
-                        case MotionEvent.ACTION_CANCEL:
-                            break;
-                    }
-                    return false;
-                }
+//            mapView.setOnTouchListener(new View.OnTouchListener() {
+//                @Override
+//                public boolean onTouch(View view, MotionEvent motionEvent) {
+//                    System.out.println(motionEvent);
+//                    switch (motionEvent.getAction()){
+//                        case MotionEvent.ACTION_DOWN:
+//                            break;
+//                        case MotionEvent.ACTION_CANCEL:
+//                            break;
+//                    }
+//                    return false;
+//                }
+//
+//            });
 
-            });
-            mapView.setPOIItemEventListener(new MapView.POIItemEventListener() {
-                @Override
-                public void onPOIItemSelected(MapView mapView, MapPOIItem mapPOIItem) {
-
-                }
-
-                @Override
-                public void onCalloutBalloonOfPOIItemTouched(MapView mapView, MapPOIItem mapPOIItem) {
-
-                }
-
-                @Override
-                public void onCalloutBalloonOfPOIItemTouched(MapView mapView, MapPOIItem mapPOIItem, MapPOIItem.CalloutBalloonButtonType calloutBalloonButtonType) {
-                    String lat = attraction.lat.toString();
-                    String lng = attraction.lng.toString();
-
-                    String uri = "daummaps://look?p=" + lat + "," + lng;
-
-                    Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(uri));
-                    startActivity(intent);
-                }
-
-                @Override
-                public void onDraggablePOIItemMoved(MapView mapView, MapPOIItem mapPOIItem, MapPoint mapPoint) {
-
-                }
-            });
             MapPOIItem marker = new MapPOIItem();
             marker.setItemName(attraction.title);
             marker.setTag(0);
@@ -289,8 +268,23 @@ public class DetailActivity extends BaseActivity implements ObservableScrollView
             ViewGroup mapViewContainer = (ViewGroup) findViewById(R.id.map_view);
             mapViewContainer.addView(mapView);
 
+            findViewById(R.id.tv_show_kakao_map).setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    String lat = attraction.lat.toString();
+                    String lng = attraction.lng.toString();
+
+                    String uri = "daummaps://look?p=" + lat + "," + lng;
+
+                    Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(uri));
+                    startActivity(intent);
+
+                }
+            });
+
         }else{
-            findViewById(R.id.map_view).setVisibility(View.GONE);
+//            findViewById(R.id.map_view).setVisibility(View.GONE);
+            rl_mapView.setVisibility(View.GONE);
         }
 
     }
