@@ -230,6 +230,7 @@ public class StartActivity extends BaseActivity implements OnDetecterListener{
         if(bgAttraction.address == null || "".equals(bgAttraction.address)){
             tv_sub_title.setVisibility(View.GONE);
         }else{
+            tv_sub_title.setVisibility(View.VISIBLE);
             tv_sub_title.setText(bgAttraction.address);
         }
         showDetailBtn.setVisibility(View.VISIBLE);
