@@ -10,6 +10,8 @@ import android.graphics.Rect;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
@@ -23,6 +25,8 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.afollestad.materialdialogs.MaterialDialog;
+import com.afollestad.materialdialogs.Theme;
 import com.db.chart.animation.Animation;
 import com.db.chart.listener.OnEntryClickListener;
 import com.db.chart.model.Bar;
@@ -50,16 +54,25 @@ import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.Locale;
 
 import ga.twpooi.detectseoul.BaseActivity;
 import ga.twpooi.detectseoul.Classifier;
+import ga.twpooi.detectseoul.Information;
 import ga.twpooi.detectseoul.R;
+import ga.twpooi.detectseoul.StartActivity;
 import ga.twpooi.detectseoul.fragment.SimplePhotoFragment;
+import ga.twpooi.detectseoul.util.AdditionalFunc;
 import ga.twpooi.detectseoul.util.Attraction;
 import ga.twpooi.detectseoul.util.CustomViewPager;
+import ga.twpooi.detectseoul.util.ParsePHP;
 
 public class DetailActivity extends BaseActivity implements ObservableScrollViewCallbacks {
+
+    private MyHandler handler = new MyHandler();
+    private final int MSG_MESSAGE_SHOW_PROGRESS = 500;
+    private final int MSG_MESSAGE_HIDE_PROGRESS = 501;
 
     private static final float MAX_TEXT_SCALE_DELTA = 0.3f;
 
@@ -85,6 +98,8 @@ public class DetailActivity extends BaseActivity implements ObservableScrollView
     private DotIndicator dotIndicator;
 
     private RelativeLayout rl_mapView;
+
+    private MaterialDialog progressDialog;
 
     // Chart
     private RelativeLayout rl_chart;
@@ -134,6 +149,7 @@ public class DetailActivity extends BaseActivity implements ObservableScrollView
 
         draggerInit();
         initObserval();
+        initProgressDialog();
 
         mTitleView.setText(attraction.title);
         img_main = (ImageView)findViewById(R.id.image);
@@ -154,6 +170,19 @@ public class DetailActivity extends BaseActivity implements ObservableScrollView
         initMapView();
         initChart();
 
+    }
+
+    private void initProgressDialog(){
+        if(progressDialog != null){
+            progressDialog.dismiss();
+        }
+        progressDialog = new MaterialDialog.Builder(this)
+                .content("잠시만 기다려주세요.")
+                .progress(true, 0)
+                .progressIndeterminateStyle(true)
+                .theme(Theme.LIGHT)
+                .cancelable(false)
+                .build();
     }
 
     private void initObserval(){
@@ -310,6 +339,12 @@ public class DetailActivity extends BaseActivity implements ObservableScrollView
                 @Override
                 public void onClick(int setIndex, int entryIndex, Rect rect) {
 
+                    String msg = String.format("%.2f", data.get((data.size()-1) - entryIndex).getConfidence()*100);
+                    showSnackbar(msg + "%");
+//                    handler.sendMessage(handler.obtainMessage(MSG_MESSAGE_SHOW_PROGRESS));
+//                    showSnackbar(setIndex + ", " + entryIndex + ", " + rect.toString() + ", " + data.get((data.size()-1) - entryIndex).getTitle());
+//                    loadAttractionInfo(data.get((data.size()-1) - entryIndex));
+
 //                    mTextViewValue.setText(String.format(Locale.ENGLISH, "%d", (int) mValues[0][entryIndex]));
 //                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB_MR1)
 //                        mTextViewValue.animate().alpha(1).setDuration(200);
@@ -464,6 +499,71 @@ public class DetailActivity extends BaseActivity implements ObservableScrollView
             li_detail.addView(v);
 
         }
+
+    }
+
+    private class MyHandler extends Handler {
+
+        public void handleMessage(Message msg)
+        {
+            switch (msg.what)
+            {
+                case MSG_MESSAGE_SHOW_PROGRESS:
+                    progressDialog.show();
+                    break;
+                case MSG_MESSAGE_HIDE_PROGRESS:
+                    initProgressDialog();
+                    break;
+                default:
+                    break;
+            }
+        }
+    }
+
+    private void loadAttractionInfo(Classifier.Recognition recognition){
+
+        final ArrayList<Classifier.Recognition> list = new ArrayList<>();
+        String attraction = recognition.getTitle();
+        list.add(recognition);
+
+        switch (attraction){
+            case "roses":
+                attraction = "1898 명동성당";
+                break;
+            case "daisy":
+                attraction = "DDP(동대문디자인플라자)";
+                break;
+            case "dandelion":
+                attraction = "경복궁";
+                break;
+            case "sunflowers":
+                attraction = "경희궁";
+                break;
+            default:
+                attraction = "N서울타워";
+                break;
+        }
+
+        HashMap<String, String> map = new HashMap<>();
+        map.put("service", "getLocationInfo");
+        map.put("query", attraction);
+        new ParsePHP(Information.MAIN_SERVER_ADDRESS, map) {
+
+            @Override
+            protected void afterThreadFinish(String data) {
+
+                Attraction att = AdditionalFunc.getAttractionInfo(data);
+
+                handler.sendMessage(handler.obtainMessage(MSG_MESSAGE_HIDE_PROGRESS));
+
+                Intent intent = new Intent(DetailActivity.this, DetailActivity.class);
+                intent.putExtra("drag_position", DraggerPosition.TOP);
+                intent.putExtra("data", list);
+                intent.putExtra("attraction", att);
+                startActivity(intent);
+
+            }
+        }.start();
 
     }
 
