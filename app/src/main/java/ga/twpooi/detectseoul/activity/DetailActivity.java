@@ -588,6 +588,7 @@ public class DetailActivity extends BaseActivity implements ObservableScrollView
                 Bundle bdl = new Bundle(1);
                 bdl.putInt("position", pattern);
                 bdl.putSerializable("img", list.get(pattern));
+                bdl.putSerializable("imgList", list);
                 f.setArguments(bdl);
                 return f;
             }else{

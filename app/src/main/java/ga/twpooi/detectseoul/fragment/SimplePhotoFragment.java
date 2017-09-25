@@ -13,7 +13,10 @@ import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
 
+import java.util.ArrayList;
+
 import ga.twpooi.detectseoul.R;
+import ga.twpooi.detectseoul.util.AdvancedImageView;
 
 public class SimplePhotoFragment extends BaseFragment {
 
@@ -21,7 +24,9 @@ public class SimplePhotoFragment extends BaseFragment {
     private View view;
     private Context context;
 
-    private ImageView imageView;
+    private int pos;
+    private ArrayList<String> imgList;
+    private AdvancedImageView imageView;
     private String img;
 
     @Override
@@ -29,7 +34,9 @@ public class SimplePhotoFragment extends BaseFragment {
         super.onCreate(savedInstanceState);
         this.setRetainInstance(true);
         if(getArguments() != null) {
+            pos = getArguments().getInt("position");
             img = getArguments().getString("img");
+            imgList = (ArrayList<String>)getArguments().getSerializable("imgList");
         }
     }
 
@@ -54,10 +61,11 @@ public class SimplePhotoFragment extends BaseFragment {
 
     private void init(){
 
-        imageView = (ImageView)view.findViewById(R.id.image);
+        imageView = (AdvancedImageView)view.findViewById(R.id.image);
         Picasso.with(context)
                 .load(img)
                 .into(imageView);
+        imageView.setImageList(imgList, pos);
 
     }
 

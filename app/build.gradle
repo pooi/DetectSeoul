@@ -61,6 +61,7 @@ dependencies {
     compile 'com.matthew-tamlin:sliding-intro-screen:3.1.0'
     compile 'com.github.zzz40500:AndroidSweetSheet:1.1.0'
     compile 'com.diogobernardino:williamchart:2.5.0'
+    compile 'com.github.chrisbanes:PhotoView:2.0.0'
     testCompile 'junit:junit:4.12'
     compile files('src/main/jniLibs/libDaumMapAndroid.jar')
 }
