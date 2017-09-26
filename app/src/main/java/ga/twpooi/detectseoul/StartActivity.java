@@ -17,6 +17,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.afollestad.materialdialogs.Theme;
 import com.flaviofaria.kenburnsview.KenBurnsView;
@@ -455,6 +456,32 @@ public class StartActivity extends BaseActivity implements OnDetecterListener{
     public void onPause(){
         super.onPause();
         needReload = true;
+    }
+
+    @Override
+    public void onBackPressed(){
+        if(mSweetSheet2.isShow()){
+            mSweetSheet2.dismiss();
+        }else{
+            new MaterialDialog.Builder(this)
+                    .title("확인")
+                    .content("앱을 종료하시겠습니까?")
+                    .positiveText("종료")
+                    .negativeText("취소")
+                    .onPositive(new MaterialDialog.SingleButtonCallback() {
+                        @Override
+                        public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                            StartActivity.super.onBackPressed();
+                        }
+                    })
+                    .onNegative(new MaterialDialog.SingleButtonCallback() {
+                        @Override
+                        public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                            dialog.dismiss();
+                        }
+                    })
+                    .show();
+        }
     }
 
     private void loadAttractionInfo(final ArrayList<Classifier.Recognition> list){
