@@ -116,6 +116,9 @@ public class DetailActivity extends BaseActivity implements ObservableScrollView
         Intent intent = getIntent();
         data = (ArrayList<Classifier.Recognition>)intent.getSerializableExtra("data");
         attraction = (Attraction)intent.getSerializableExtra("attraction");
+        String photo = attraction.picture.get(0);
+        attraction.picture.remove(0);
+        attraction.picture.add(photo);
 
         init();
 
@@ -154,7 +157,7 @@ public class DetailActivity extends BaseActivity implements ObservableScrollView
         mTitleView.setText(attraction.title);
         img_main = (ImageView)findViewById(R.id.image);
         Picasso.with(getApplicationContext())
-                .load(attraction.picture.get(0))
+                .load(attraction.picture.get(1))
                 .into(img_main);
         tv_content = (TextView)findViewById(R.id.tv_content);
         tv_content.setText(attraction.contents);
@@ -177,7 +180,7 @@ public class DetailActivity extends BaseActivity implements ObservableScrollView
             progressDialog.dismiss();
         }
         progressDialog = new MaterialDialog.Builder(this)
-                .content("잠시만 기다려주세요.")
+                .content(R.string.please_wait)
                 .progress(true, 0)
                 .progressIndeterminateStyle(true)
                 .theme(Theme.LIGHT)
@@ -426,7 +429,7 @@ public class DetailActivity extends BaseActivity implements ObservableScrollView
             TextView tv_title = (TextView)v.findViewById(R.id.tv_title);
             TextView tv_content = (TextView)v.findViewById(R.id.tv_content);
 
-            tv_title.setText("주소");
+            tv_title.setText(R.string.address);
             tv_content.setText(attraction.address);
 
             li_detail.addView(v);
@@ -438,7 +441,7 @@ public class DetailActivity extends BaseActivity implements ObservableScrollView
             TextView tv_title = (TextView)v.findViewById(R.id.tv_title);
             TextView tv_content = (TextView)v.findViewById(R.id.tv_content);
 
-            tv_title.setText("웹페이지");
+            tv_title.setText(R.string.web_page);
             tv_content.setText(attraction.web);
             tv_content.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -459,7 +462,7 @@ public class DetailActivity extends BaseActivity implements ObservableScrollView
             TextView tv_title = (TextView)v.findViewById(R.id.tv_title);
             TextView tv_content = (TextView)v.findViewById(R.id.tv_content);
 
-            tv_title.setText("전화번호");
+            tv_title.setText(R.string.telephone);
             tv_content.setText(attraction.telephone);
             tv_content.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -492,7 +495,7 @@ public class DetailActivity extends BaseActivity implements ObservableScrollView
                     ClipboardManager clipboard = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
                     ClipData clip = ClipData.newPlainText("text", content);
                     clipboard.setPrimaryClip(clip);
-                    showSnackbar("클립보드에 저장했습니다.");
+                    showSnackbar(R.string.saved_clipboard);
                 }
             });
 
@@ -526,27 +529,29 @@ public class DetailActivity extends BaseActivity implements ObservableScrollView
         String attraction = recognition.getTitle();
         list.add(recognition);
 
-        switch (attraction){
-            case "roses":
-                attraction = "1898 명동성당";
-                break;
-            case "daisy":
-                attraction = "DDP(동대문디자인플라자)";
-                break;
-            case "dandelion":
-                attraction = "경복궁";
-                break;
-            case "sunflowers":
-                attraction = "경희궁";
-                break;
-            default:
-                attraction = "N서울타워";
-                break;
-        }
+        attraction = AdditionalFunc.convertAttraction(attraction);
+//        switch (attraction){
+//            case "roses":
+//                attraction = "1898 명동성당";
+//                break;
+//            case "daisy":
+//                attraction = "DDP(동대문디자인플라자)";
+//                break;
+//            case "dandelion":
+//                attraction = "경복궁";
+//                break;
+//            case "sunflowers":
+//                attraction = "경희궁";
+//                break;
+//            default:
+//                attraction = "N서울타워";
+//                break;
+//        }
 
         HashMap<String, String> map = new HashMap<>();
         map.put("service", "getLocationInfo");
         map.put("query", attraction);
+        map.put("english", AdditionalFunc.needEnglishText());
         new ParsePHP(Information.MAIN_SERVER_ADDRESS, map) {
 
             @Override

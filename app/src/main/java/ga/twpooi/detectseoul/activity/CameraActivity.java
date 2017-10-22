@@ -120,7 +120,7 @@ public class CameraActivity extends BaseActivity implements OnDetecterListener{
             progressDialog.dismiss();
         }
         progressDialog = new MaterialDialog.Builder(this)
-                .content("잠시만 기다려주세요.")
+                .content(R.string.please_wait)
                 .progress(true, 0)
                 .progressIndeterminateStyle(true)
                 .theme(Theme.LIGHT)
@@ -141,13 +141,13 @@ public class CameraActivity extends BaseActivity implements OnDetecterListener{
                     progressDialog.hide();
                     break;
                 case MSG_MESSAGE_CHANGE_PROGRESS:
-                    progressDialog.setTitle("명소 정보를 불러오는 중입니다...");
+                    progressDialog.setTitle(R.string.loading_attraction_info);
                     break;
                 case MSG_MESSAGE_ERROR_DIALOG:
                     new MaterialDialog.Builder(CameraActivity.this)
-                            .title("실패")
-                            .content("인식에 실패하였습니다.")
-                            .positiveText("확인")
+                            .title(R.string.fail_srt)
+                            .content(R.string.fail_detect)
+                            .positiveText(R.string.ok)
                             .show();
                     break;
                 default:
@@ -189,27 +189,29 @@ public class CameraActivity extends BaseActivity implements OnDetecterListener{
 
         String attraction = list.get(0).getTitle();
 
-        switch (attraction){
-            case "roses":
-                attraction = "1898 명동성당";
-                break;
-            case "daisy":
-                attraction = "DDP(동대문디자인플라자)";
-                break;
-            case "dandelion":
-                attraction = "경복궁";
-                break;
-            case "sunflowers":
-                attraction = "경희궁";
-                break;
-            default:
-                attraction = "N서울타워";
-                break;
-        }
+        attraction = AdditionalFunc.convertAttraction(attraction);
+//        switch (attraction){
+//            case "roses":
+//                attraction = "1898 명동성당";
+//                break;
+//            case "daisy":
+//                attraction = "DDP(동대문디자인플라자)";
+//                break;
+//            case "dandelion":
+//                attraction = "경복궁";
+//                break;
+//            case "sunflowers":
+//                attraction = "경희궁";
+//                break;
+//            default:
+//                attraction = "N서울타워";
+//                break;
+//        }
 
         HashMap<String, String> map = new HashMap<>();
         map.put("service", "getLocationInfo");
         map.put("query", attraction);
+        map.put("english", AdditionalFunc.needEnglishText());
         new ParsePHP(Information.MAIN_SERVER_ADDRESS, map) {
 
             @Override

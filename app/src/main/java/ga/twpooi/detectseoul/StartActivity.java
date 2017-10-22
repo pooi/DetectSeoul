@@ -199,7 +199,7 @@ public class StartActivity extends BaseActivity implements OnDetecterListener{
             progressDialog.dismiss();
         }
         progressDialog = new MaterialDialog.Builder(this)
-                .content("잠시만 기다려주세요.")
+                .content(getString(R.string.please_wait))
                 .progress(true, 0)
                 .progressIndeterminateStyle(true)
                 .theme(Theme.LIGHT)
@@ -211,6 +211,7 @@ public class StartActivity extends BaseActivity implements OnDetecterListener{
 
         HashMap<String, String> map = new HashMap<>();
         map.put("service", "getRandomLocation");
+        map.put("english", AdditionalFunc.needEnglishText());
         new ParsePHP(Information.MAIN_SERVER_ADDRESS, map) {
 
             @Override
@@ -236,7 +237,7 @@ public class StartActivity extends BaseActivity implements OnDetecterListener{
         }
         showDetailBtn.setVisibility(View.VISIBLE);
         Picasso.with(getApplicationContext())
-                .load(bgAttraction.picture.get(0))
+                .load(bgAttraction.picture.get(1))
                 .into(kenBurnsView);
 
     }
@@ -274,14 +275,14 @@ public class StartActivity extends BaseActivity implements OnDetecterListener{
     public void loadImgFromURL(){
 
         new MaterialDialog.Builder(StartActivity.this)
-                .title("입력")
+                .title(R.string.input_srt)
                 .inputType(InputType.TYPE_CLASS_TEXT |
                         InputType.TYPE_TEXT_VARIATION_PERSON_NAME |
                         InputType.TYPE_TEXT_FLAG_CAP_WORDS)
                 .theme(Theme.LIGHT)
-                .positiveText("확인")
-                .negativeText("취소")
-                .input("사진의 URL 주소를 입력해주세요.", "", new MaterialDialog.InputCallback() {
+                .positiveText(R.string.ok)
+                .negativeText(R.string.cancel)
+                .input(getString(R.string.please_input_photo_url), "", new MaterialDialog.InputCallback() {
                     @Override
                     public void onInput(@NonNull MaterialDialog dialog, CharSequence input) {
                         final String url = input.toString();
@@ -323,14 +324,14 @@ public class StartActivity extends BaseActivity implements OnDetecterListener{
     private void showSearchAttractionDialog(){
 
         new MaterialDialog.Builder(StartActivity.this)
-                .title("입력")
+                .title(R.string.input_srt)
                 .inputType(InputType.TYPE_CLASS_TEXT |
                         InputType.TYPE_TEXT_VARIATION_PERSON_NAME |
                         InputType.TYPE_TEXT_FLAG_CAP_WORDS)
                 .theme(Theme.LIGHT)
-                .positiveText("검색")
-                .negativeText("취소")
-                .input("검색어를 입력해주세요.", "", new MaterialDialog.InputCallback() {
+                .positiveText(R.string.search_srt)
+                .negativeText(R.string.cancel)
+                .input(getString(R.string.please_input_serach_text), "", new MaterialDialog.InputCallback() {
                     @Override
                     public void onInput(@NonNull MaterialDialog dialog, CharSequence input) {
 
@@ -348,6 +349,7 @@ public class StartActivity extends BaseActivity implements OnDetecterListener{
         HashMap<String, String> map = new HashMap<>();
         map.put("service", "searchLocation");
         map.put("query", query);
+        map.put("english", AdditionalFunc.needEnglishText());
         new ParsePHP(Information.MAIN_SERVER_ADDRESS, map) {
 
             @Override
@@ -380,13 +382,13 @@ public class StartActivity extends BaseActivity implements OnDetecterListener{
                     initProgressDialog();
                     break;
                 case MSG_MESSAGE_CHANGE_PROGRESS:
-                    progressDialog.setTitle("명소 정보를 불러오는 중입니다...");
+                    progressDialog.setTitle(R.string.loading_attraction_info);
                     break;
                 case MSG_MESSAGE_ERROR_DIALOG:
                     new MaterialDialog.Builder(StartActivity.this)
-                            .title("실패")
-                            .content("인식에 실패하였습니다.")
-                            .positiveText("확인")
+                            .title(R.string.fail_srt)
+                            .content(R.string.fail_detect)
+                            .positiveText(R.string.ok)
                             .show();
                     break;
                 case MSG_MESSAGE_REFRESH_BG:
@@ -464,10 +466,10 @@ public class StartActivity extends BaseActivity implements OnDetecterListener{
             mSweetSheet2.dismiss();
         }else{
             new MaterialDialog.Builder(this)
-                    .title("확인")
-                    .content("앱을 종료하시겠습니까?")
-                    .positiveText("종료")
-                    .negativeText("취소")
+                    .title(R.string.ok)
+                    .content(R.string.finish_app)
+                    .positiveText(R.string.finish_srt)
+                    .negativeText(R.string.cancel)
                     .onPositive(new MaterialDialog.SingleButtonCallback() {
                         @Override
                         public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
@@ -488,27 +490,29 @@ public class StartActivity extends BaseActivity implements OnDetecterListener{
 
         String attraction = list.get(0).getTitle();
 
-        switch (attraction){
-            case "roses":
-                attraction = "1898 명동성당";
-                break;
-            case "daisy":
-                attraction = "DDP(동대문디자인플라자)";
-                break;
-            case "dandelion":
-                attraction = "경복궁";
-                break;
-            case "sunflowers":
-                attraction = "경희궁";
-                break;
-            default:
-                attraction = "N서울타워";
-                break;
-        }
+        attraction = AdditionalFunc.convertAttraction(attraction);
+//        switch (attraction){
+//            case "heunginjimun":
+//                attraction = "흥인지문(동대문)";
+//                break;
+//            case "daisy":
+//                attraction = "DDP(동대문디자인플라자)";
+//                break;
+//            case "dandelion":
+//                attraction = "경복궁";
+//                break;
+//            case "sunflowers":
+//                attraction = "경희궁";
+//                break;
+//            default:
+//                attraction = "N서울타워";
+//                break;
+//        }
 
         HashMap<String, String> map = new HashMap<>();
         map.put("service", "getLocationInfo");
         map.put("query", attraction);
+        map.put("english", AdditionalFunc.needEnglishText());
         new ParsePHP(Information.MAIN_SERVER_ADDRESS, map) {
 
             @Override

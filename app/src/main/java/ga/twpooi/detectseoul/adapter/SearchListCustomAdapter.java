@@ -91,7 +91,7 @@ public class SearchListCustomAdapter extends RecyclerView.Adapter<SearchListCust
         holder.tv_content.setText(item.sContents);
 
         Picasso.with(context)
-                .load(item.picture.get(0))
+                .load(item.picture.get(1))
                 .into(holder.img);
 
         holder.cv.setOnClickListener(new View.OnClickListener() {

@@ -17,6 +17,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Locale;
 
 
 /**
@@ -159,6 +160,56 @@ public class AdditionalFunc {
             }
         }
         return str;
+    }
+
+    public static String needEnglishText(){
+        String language = Locale.getDefault().getDisplayLanguage();
+        if( language.equals( Locale.KOREAN.getDisplayLanguage() ) ){
+            return "0";
+        }else{
+            return "1";
+        }
+    }
+
+    public static String convertAttraction(String attraction){
+        if(needEnglishText().equals("1")){
+            switch (attraction){
+                case "heunginjimun":
+                    attraction = "Heunginjimun Gate";
+                    break;
+                case "nseoultower":
+                    attraction = "N Seoul Tower";
+                    break;
+                case "thenationalmuseumofkorea":
+                    attraction = "The National Museum of Korea";
+                    break;
+                case "gyeongbokgung":
+                    attraction = "Gyeongbokgung";
+                    break;
+                case "seonyugyo":
+                    attraction = "Seonyugyo Bridge";
+                    break;
+            }
+        }else{
+            switch (attraction){
+                case "heunginjimun":
+                    attraction = "흥인지문(동대문)";
+                    break;
+                case "nseoultower":
+                    attraction = "N서울타워";
+                    break;
+                case "thenationalmuseumofkorea":
+                    attraction = "국립중앙박물관";
+                    break;
+                case "gyeongbokgung":
+                    attraction = "경복궁";
+                    break;
+                case "seonyugyo":
+                    attraction = "선유교";
+                    break;
+            }
+        }
+        return attraction;
     }
 
     public static Attraction getAttractionInfo(String data){
