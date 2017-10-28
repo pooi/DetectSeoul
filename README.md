@@ -1,5 +1,10 @@
-# DetectSeoul
+<h1 align=center>DetectSeoul</h1>
+<p align=center>DetectSeoul은 서울을 방문하는 외래 관광객을 타겟으로하여, 서울의 유명 명소들의 사진을 이용해 딥러닝을 실시한 후 사용자가 해당 명소를 사진으로 촬영하거나, 핸드폰에 저장된 사진을 이용해 조회를 하면 해당 명소에 대한 상세한 정보를 사용자에게 제공해준다. 명소 정보는 영어 및 한국어로 사용자에게 제공된다.</p>
 
+<br>
+<br>
+
+>Contact : ldaytw@gmailc.om
 <br>
 
 ## 기획 배경
