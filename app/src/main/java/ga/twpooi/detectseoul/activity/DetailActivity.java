@@ -264,55 +264,63 @@ public class DetailActivity extends BaseActivity implements ObservableScrollView
 
     }
 
-    private void initMapView(){
+    private void initMapView() throws UnsatisfiedLinkError{
 
         rl_mapView = (RelativeLayout)findViewById(R.id.rl_map_view);
 
         if(attraction.isHaveLatLng()){
             rl_mapView.setVisibility(View.VISIBLE);
 
-            MapView mapView = new MapView(this);
-//            mapView.setOnTouchListener(new View.OnTouchListener() {
-//                @Override
-//                public boolean onTouch(View view, MotionEvent motionEvent) {
-//                    System.out.println(motionEvent);
-//                    switch (motionEvent.getAction()){
-//                        case MotionEvent.ACTION_DOWN:
-//                            break;
-//                        case MotionEvent.ACTION_CANCEL:
-//                            break;
-//                    }
-//                    return false;
-//                }
-//
-//            });
+            String arch = System.getProperty("os.arch");
+            System.out.println(arch);
+            if(arch.startsWith("arm")) {
 
-            MapPOIItem marker = new MapPOIItem();
-            marker.setItemName(attraction.title);
-            marker.setTag(0);
-            marker.setMapPoint(MapPoint.mapPointWithGeoCoord(attraction.lat, attraction.lng));
-            marker.setMarkerType(MapPOIItem.MarkerType.BluePin); // 기본으로 제공하는 BluePin 마커 모양.
-            marker.setSelectedMarkerType(MapPOIItem.MarkerType.RedPin); // 마커를 클릭했을때, 기본으로 제공하는 RedPin 마커 모양.
+                MapView mapView = new MapView(this);
+                //            mapView.setOnTouchListener(new View.OnTouchListener() {
+                //                @Override
+                //                public boolean onTouch(View view, MotionEvent motionEvent) {
+                //                    System.out.println(motionEvent);
+                //                    switch (motionEvent.getAction()){
+                //                        case MotionEvent.ACTION_DOWN:
+                //                            break;
+                //                        case MotionEvent.ACTION_CANCEL:
+                //                            break;
+                //                    }
+                //                    return false;
+                //                }
+                //
+                //            });
 
-            mapView.addPOIItem(marker);
-            mapView.setMapCenterPoint(MapPoint.mapPointWithGeoCoord(attraction.lat, attraction.lng), true);
+                MapPOIItem marker = new MapPOIItem();
+                marker.setItemName(attraction.title);
+                marker.setTag(0);
+                marker.setMapPoint(MapPoint.mapPointWithGeoCoord(attraction.lat, attraction.lng));
+                marker.setMarkerType(MapPOIItem.MarkerType.BluePin); // 기본으로 제공하는 BluePin 마커 모양.
+                marker.setSelectedMarkerType(MapPOIItem.MarkerType.RedPin); // 마커를 클릭했을때, 기본으로 제공하는 RedPin 마커 모양.
 
-            ViewGroup mapViewContainer = (ViewGroup) findViewById(R.id.map_view);
-            mapViewContainer.addView(mapView);
+                mapView.addPOIItem(marker);
+                mapView.setMapCenterPoint(MapPoint.mapPointWithGeoCoord(attraction.lat, attraction.lng), true);
 
-            findViewById(R.id.tv_show_kakao_map).setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    String lat = attraction.lat.toString();
-                    String lng = attraction.lng.toString();
+                ViewGroup mapViewContainer = (ViewGroup) findViewById(R.id.map_view);
+                mapViewContainer.addView(mapView);
 
-                    String uri = "daummaps://look?p=" + lat + "," + lng;
+                findViewById(R.id.tv_show_kakao_map).setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        String lat = attraction.lat.toString();
+                        String lng = attraction.lng.toString();
 
-                    Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(uri));
-                    startActivity(intent);
+                        String uri = "daummaps://look?p=" + lat + "," + lng;
 
-                }
-            });
+                        Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(uri));
+                        startActivity(intent);
+
+                    }
+                });
+
+            }else{
+                rl_mapView.setVisibility(View.GONE);
+            }
 
         }else{
 //            findViewById(R.id.map_view).setVisibility(View.GONE);
