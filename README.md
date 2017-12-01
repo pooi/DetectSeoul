@@ -10,6 +10,7 @@
 ## Career
 <ul>
   <li>2017년 서울시 앱공모전 출품작(DetechSeoul)</li>
+  <li>2차 평가 합격</li>
 </ul>
 
 <br>
