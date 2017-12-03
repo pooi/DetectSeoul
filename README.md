@@ -4,7 +4,7 @@
 <br>
 <br>
 
->Contact : ldaytw@gmailc.om
+>Contact : ldaytw@gmail.com
 <br>
 
 ## Overview
@@ -14,12 +14,13 @@ DetectSeoul is aimed at foreign tourists visiting Seoul, and after deep-learning
 ## Career
 <ul>
   <li>2017년 서울시 앱공모전 출품작(DetechSeoul)</li>
-  <li>2차 평가 합격</li>
+  <li>2차 평가 합격(2017.11.21)</li>
 </ul>
 <hr>
 <ul>
   <li>DetectSeoul was Submitted for 2017 Seoul mobile app contest.</li>
-  <li>Passed the second evaluation</li>
+  <li>Passed the second evaluation(Nov. 21, 2017)</li>
+  <li>Waiting for final result announcement</li>
 </ul>
 
 <br>
