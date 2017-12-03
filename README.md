@@ -7,10 +7,19 @@
 >Contact : ldaytw@gmailc.om
 <br>
 
+## Overview
+DetectSeoul is aimed at foreign tourists visiting Seoul, and after deep-learning using photographs of famous attractions in Seoul, if a user takes a photograph of the attractions or a photo stored in a mobile phone, then this app can provide attractions information to users. Attractions information are provided to the user in English and Korean.
+<br><br>
+
 ## Career
 <ul>
   <li>2017년 서울시 앱공모전 출품작(DetechSeoul)</li>
-  <li>2차 평가 합격</li>
+  <li>2차 평가 합격</li>
+</ul>
+<hr>
+<ul>
+  <li>DetectSeoul was Submitted for 2017 Seoul mobile app contest.</li>
+  <li>Passed the second evaluation</li>
 </ul>
 
 <br>
@@ -31,9 +40,11 @@ DetectSeoul은 명소에 대한 이미지를 인식해 해당 명소에 대한 �
 <br>
 <br>
 
-## 서비스 내용
+## Features
 DetectSeoul에서 제공하는 기능은 크게 3가지 이다. 이미지를 통해 명소를 인식하고 해당 명소에 대한 상세한 정보를 제공해주는 기능, 정보를 얻고자 하는 명소를 검색을 통해 찾는 기능, 마지막으로 앱의 메인화면에서 랜덤으로 서울의 명소를 소개해주는 기능이다.
 사진을 통해 명소를 인식하는 기능은 사용자로부터 사진을 입력받은 후 딥러닝을 통해 학습한 데이터를 이용해 이미지를 인식하고, 인식 결과와 명소에 대한 정보를 사용자에게 제시해주는 기능이다. 사용자가 이미지를 입력하는 방법은 카메라를 통한 입력, 모바일에 저장된 사진을 통한 입력, 웹페이지의 이미지 URL을 통한 입력으로 3가지 방법이 있다. (2017.10.28 기준 명소 인식은 경복궁, 흥인지문, N서울타워, 선유고, 국립중앙박물관만 가능하다.)
+<hr>
+There are three features provided by DetectSeoul. First, recognize attractions through images and provide detailed information about the attractions. It is a feature that recognizes an image using data learned through deep learning after receiving a photograph from a user, and provide information about recognition results and attractions to the user. There are three methods for the user to input an image: input through a camera, input through a photograph stored in a mobile, and input through an image URL of a web page. (Attraction recognition is possible only at Gyeongbokgung, Heunginjimun, N Seoul Tower, Sun Yugo and the National Museum of Korea now.) Second, you can find attractions by searching. Finally, introduces the famous attractions of Seoul at random from the main screen of the app.
 <table>
   <tr>
     <td width=33%><img src="https://github.com/pooi/DetectSeoul/blob/master/Screenshot/Screenshot_20171022-151942.png"></td>
@@ -77,27 +88,39 @@ DetectSeoul에서 제공하는 기능은 크게 3가지 이다. 이미지를 통
 <br>
 <br>
 
-## 데이터 활용 내용
+## Data Usage
 <ul>
   <li>Google – 딥러닝 학습에 필요한 이미지 수집에 활용된다.</li>
   <li>visitseoul.net – 서울 명소에 대한 정보 수집에 사용된다. 이미지 인식 후 상세 정보 제공, 검색 등에 활용된다.</li>
   <li>다음카카오 지도 – 명소의 주소를 토대로 사용자에게 지도를 통해 위치를 표시해 주는 기능에 활용된다. </li>
 </ul>
-
-<br>
-<br>
-
-## 기대 효과
+<hr>
 <ul>
-  <li>이 앱이 서울뿐만 아니라 전국의 모든 관광지에 적용된다면, 한국만의 특색 있는 관광 콘텐츠를 제작하는 것이 가능하다.</li>
-  <li>외국인들에게 명소에 대한 정보를 보다 쉽게 제시해 줄 수 있다.</li>
-  <li>서울을 즐기는 하나의 놀이 문화로서 즐길거리를 제공해줄 수 있다.</li>
+  <li>Google - It is used for image collection for deep learning.</li>
+  <li><a href="http://visitseoul.net">visitseoul.net</a> - It is used to collect information about Seoul attractions. It is used to provide detailed information after image recognition and search.</li>
+  <li>Daum Kakao Map - Based on the address of the attractions, it is used to display the location of the map to the user.</li>
 </ul>
 
 <br>
 <br>
 
-## 출처
+## Expected effects
+<ul>
+  <li>이 앱이 서울뿐만 아니라 전국의 모든 관광지에 적용된다면, 한국만의 특색 있는 관광 콘텐츠를 제작하는 것이 가능하다.</li>
+  <li>외국인들에게 명소에 대한 정보를 보다 쉽게 제시해 줄 수 있다.</li>
+  <li>서울을 즐기는 하나의 놀이 문화로서 즐길거리를 제공해줄 수 있다.</li>
+</ul>
+<hr>
+<ul>
+  <li>It is possible to produce unique tourist contents of Korea.</li>
+  <li>It is possible to provide attractions information to foreign tourists more easily.</li>
+  <li>It is possible to provide a play culture that enjoys Seoul.</li>
+</ul>
+
+<br>
+<br>
+
+## Reference
 <ul>
   <li><a href="http://data.seoul.go.kr/openinf/linkview.jsp?infId=OA-860">http://data.seoul.go.kr/openinf/linkview.jsp?infId=OA-860</a></li>
   <li><a href="http://sculture.seoul.go.kr/files/2016/04/5714d504dd3d49.99991083.pdf">http://sculture.seoul.go.kr/files/2016/04/5714d504dd3d49.99991083.pdf</a></li>
