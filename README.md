@@ -15,12 +15,13 @@ DetectSeoul is aimed at foreign tourists visiting Seoul, and after deep-learning
 <ul>
   <li>2017년 서울시 앱공모전 출품작(DetechSeoul)</li>
   <li>2차 평가 합격(2017.11.21)</li>
+  <li>장려상 수상(2017.12)</li>
 </ul>
 <hr>
 <ul>
   <li>DetectSeoul was Submitted for 2017 Seoul mobile app contest.</li>
   <li>Passed the second evaluation(Nov. 21, 2017)</li>
-  <li>Waiting for final result announcement</li>
+  <li>2017 Seoul City App Contest, 4th prize, Dec/2017</li>
 </ul>
 
 <br>
